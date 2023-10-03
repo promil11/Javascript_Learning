@@ -1,128 +1,166 @@
-// DOM MANIPULATION
+// Array
+// const array = ["promil", 48, true, null, undefined, ["arrayInside", 1], {company:"GOOGLE"}, function developer(){console.log("I become a great developer");}];
+// console.log(Array.isArray(array));//true
+// console.log(array[3]); //null
+// console.log(array[4]); //undefined
+// console.log(array[5]); //again unbdefine because apart from array size index if we want any other indices value then it will return undefined
+// console.log(array[-2]); //undefined
+// console.log(array[[7]]());
 
-// 1)accessing html element
-// console.log(document.body)
-// a)document.getElementById(ID)
-// b)document.getElementsByClassName(classname) //return arrayof HTMLCollection
-// c)document.getElementsByTagName(tagName)  //return arrayof HTMLCollection
-// d)document.querySelector(id,classname,tagname);
-// e)document.querySelectorAll(id,tagName,classname) //return arrayof NodeList
+// for(let i = 0; i < array.length; i++)
+// {
+//     console.log("the array elements is " + array[i]);
+// }
 
-
-// const fetchSpecialClass = document.getElementsByClassName("special")
-// console.log(fetchSpecialClass);
-
-// const fetchNotSpecialClass = document.querySelectorAll(".container .notSpecial")
-// console.log(fetchNotSpecialClass);
-
-// const fetchAllDivTag = document.getElementsByTagName("div")
-// console.log(fetchAllDivTag);
-
-
-// 2)mordify HTML
-// a)changing HTML contain using innerHTML
-// const changeBox = document.getElementById("box-1")
-// changeBox.innerHTML = "heyy Box1 i am changed...."
-
-// a)changing attribute value
-// const changeBox = document.getElementById("box-4")
-// changeBox.style.color = "red"
-// changeBox.id = "box-5"
-
-// c)modify class in HTML
-// const changeBox = document.getElementById("box-4")
-// -->// changeBox.classList.add("newClass")
-// -->// changeBox.classList.remove("notSpecial")
-
-// -->//document.getElementById("toggle").addEventListener('click',()=>{
-//     const changeBox = document.getElementById("box-4")
-//     changeBox.classList.toggle("toggleClass")
-// })
-
-// d)Create and appending HTML element
-// const newPara = document.createElement("p");
-// newPara.innerText = "heyy this is new paragrapgh create by createChild and append by appendChild"
-
-// const container = document.getElementById("container")
-// container.appendChild(newPara)
+// deepCopy and shallowCopy array
+                    // /deep copy
+// let newArray;
+// newArray = array;
+// console.log(newArray);
+// console.log(array);
+// console.log(newArray[7]); //return f developer(){}
 
 
-// syntax, variable, comments, statements
+// delete(newArray[7])
+// console.log(newArray);
+// console.log(array);
+// console.log(newArray[7]); //return undefined
+// after delete the newArray index by delete keyword the length of newArray and array are same as before deleting
+//  but the notice is after chnde in newArray old array also changed ie deep copy
+                
+                //  shallow copy
+// let newArray ;
+// newArray = [...array];
+// console.log(newArray);
+// console.log(array);
 
-// const/let a = 5;
-// const/let b = a + 6;
-// console.log(b);
+// delete(newArray[7])
+// console.log(newArray); 
+// console.log(array);
+// after changing in newArray wont affect on old array
 
-// let person = "promil"
-// carName = "AUDI"   //here js compiler gives an error carName is not define
-// price = "100M"
 
-// console.log("car name : " + carName + " owned by: " + person);
+// const arrayString = array.toString()
+// console.log(arrayString);
 
-// solution is:
 
-// let person = "promil"
-// let carName = "AUDI"
-// let price = "100M"
-
-// console.log("car name : " + carName + " owned by: " + person);
-
-// or you can write this:
-
-// let person = "promil",
-// carName = "AUDI",
-// price = "100M"
-
-// console.log("car name : " + carName + " owned by: " + person);
-
-// const a = 5, b=6;  //its works a and b both are constant
-// // b=7 //error const variables are not reassigned
-// console.log(a+b)
-
-// let b,c;
-// let a=b=c=5;
-// console.log(typeof(a))   //number
-// console.log(a); //5
-
-// only (A-Z or a-z or _ or $) are alowed for first letter in variable
-// let 1promil = "promil" //throw error
-// console.log(1promil) 
-
-// javascript are case sensitive
-// const myName = " promil ";
-// const MyName = " subhi ";
-// console.log(myName); //promil
-// console.log(MyName); //subhi
+// practise to show list in html
+// let formate = "<ul>"
+// for(let i=0; i<array.length; i++)
+// {
+//     formate += "<li> " +array[i]+ " </li>"
+// }
+// formate += "</ul>"
+// const list = document.getElementById("show_list");
+// list.innerHTML = formate ; 
 
 
 
-// javascript DATATYPE:
-// 1)Number
-// 2)String
-// 3)Boolean 
-// 4)null
-// 5)undefined
-// 6)Array
-// 7)Object
+// OBJECT
+
+// 1)using create constructor:
+// The Object.create() static method creates a new object, using an 
+// existing object as the prototype of the newly created object.
+// const person = {
+//     isHuman: false,
+//     printIntroduction: function () {
+//       console.log(`My name is ${this.name}. Am I human? ${this.isHuman}`);
+//     },
+//   };
+
+// const newPerson = Object.create(person)
+// const newPerson2 = Object.create(person)
+
+// newPerson.isHuman = true; //this will not change the original object
+
+// console.log(person); 
+// console.log(newPerson);
+// console.log(newPerson.printIntroduction()); //have the ability to inherit the properties of existing object
+
+// newPerson2.name = "promil"
+// console.log(newPerson2);
+
+// CONCLUSION: 
+// by using object.create constructor method to create object have inherite existing object properties
+//  and also not affect the original object after changing in newly created properties
 
 
-// // when decleared but not initialized then in this case it will show undefined
-// let value;
-// console.log(value) //undefined
+// 2)using literals:
+// const userObject = {
+//     name: "promil",
+//     age: 23,
+//     location: "indore",
+//     "company name" : "cyber infrastructure"  //in this case we have to use userObject["company name"]
+// }
 
-// // when decleared and initialized with null keyword then in this case it will show null 
-// let valueNew = null;
-// console.log(valueNew); //null
+// two way to access:
+// a)using dot  ie userObject.name
+// console.log(userObject.location);
 
-// // IMPORTANT about NULL and undefined
-// console.log(typeof(valueNew) == "null" ); 
-// // return false because type of null is object
+// b)using array sign ie userObject[name]
+// console.log(userObject["company name"]);
 
-// console.log(typeof(undefined) == "undefined");
-// // return true because type of undefined is undefined
+// IMPORTANT: Symbol datatype
 
-// console.log(undefined == null) 
-// // return true
+// const mySymbol = Symbol("keySymbol")
+// userObject[mySymbol] = "valueSymbol" //right it act as Symbol ie Symbol(keySymbol) = "valueSymbol"
+// userObject.mySymbol = "valueSymbol" //wrong syntax it act as a new key value pair ie mySymbol : "valueSymbol"
+// console.log(userObject);
 
-// console.log(undefined === null) 
-// // return false
+
+// userObject.greeting = function () {
+//     console.log(`hello ${this.name} in ${this["company name"]}`);
+// }
+
+// userObject.greeting()
+// console.log(userObject); //greeting include automatically in userObject
+
+
+// copy more then one object in newObject
+// 1) method: using assign method:
+
+// const object1 = {
+//     name : "promil",
+// }
+// const object2 = {
+//     company : "CIS",
+// }
+
+// const newObject = Object.assign({}, object1, object2)
+// console.log(newObject);
+
+// 2)method: using spread operator
+// const object1 = {
+//     name : "promil",
+// }
+// const object2 = {
+//     company : "CIS",
+// }
+
+// const newObject = {...object1, ...object2}  //this is mostly used syntax
+// console.log(newObject);
+
+
+
+//deepCopy object and shallowcopy object
+// const originalObject = {
+//     name : "promax",
+//     email : "promiljain@gmail.com",
+//     app : "CycloneApp" 
+// }
+
+//deepCopy object
+// const copyObject = originalObject;
+
+// copyObject.name = "subhi"
+
+// console.log(originalObject);
+// console.log(copyObject);
+
+//shallowcopy object
+// const copyObject = {...originalObject};
+
+// copyObject.name = "subhi"
+
+// console.log(originalObject);
+// console.log(copyObject);
