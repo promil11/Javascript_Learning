@@ -1,82 +1,62 @@
 
-// Promise --->are solution of callback hell
-// three state-->1)pending  2)resolve  3)reject 
+// closure  -->combination of function with its lexical environment is called closure
 
-// console.log("START");
-
-// const promiseObject = new Promise(function(resolve,reject){
-//     setTimeout(()=>{
-//         resolve("data fetch successfully....")
-//         // reject("api doesn't work");
-//     },3000);
-//     // reject("api doesn't work");
-// }) 
-
-// const promiseObject2 = new Promise(function(resolve,reject){
-//     setTimeout(()=>{
-//         resolve("data2 fetch successfully....")
-//     },1000);
-//     // reject("api doesn't work");
-// }) 
-
-// promiseObject.then((res)=>{
-//     console.log(res);
-// }).catch((err)=>{
-//     console.log(err);
-// })
- 
-
-//promise.all return all data eksath when all data is resolve if one of the promise return reject the promise.all return reject ====>IMPORTANT
-// Promise.all([promiseObject,promiseObject2]).then((data)=>{
-//     console.log(data);
-// }).catch((err)=>{console.log(err)});
-
-
-
-// asyn/await
-
-// function getCheese()
+// function x()
 // {
-//     const readyCheese =  new Promise(function(resolve,reject){
-//         setTimeout(()=>{
-//             resolve("your cheese is ready");
-//         },3000)
-//     })
-//     // console.log(readyCheese);  //return promise with pending state
-//     console.log("woooo");
-//     return readyCheese;
-// }
+//     let a = "promil jain";
 
-// function makeDough(cheese)
+//     function y()
+//     {
+//         console.log(a);
+//     }
+
+//     a = "subhi jain";
+//     return y; 
+// }
+// another cornercase
+// function x()
 // {
-//     const readyDough = new Promise(function(resolve,reject){
-//         setTimeout(()=>{
-//             resolve("your dough is ready");
-//         },4000)
-//     })
-//     console.log("wooo");
-//     return readyDough;
+//     let a = "promil jain";
+
+//     function y()
+//     {
+//         let b = "Smart";
+//         function z()
+//         {
+//             console.log(a,b); //purvajo ke baare me bhi yaad rakhta h
+//         }
+//         return z;
+//     }
+
+//     a = "subhi jain";
+//     return y();
 // }
 
-// function bakePizza(dough)
+// const returnFunction = x();
+// returnFunction();  //here note that after x function return y it will remove from the call stack 
+//                    //but still y remember the lexical environment variable that means it return 
+//                    //function along with lexical environment ie(closure)
+
+
+
+//currying --> currying is the technique to convert a function of n arguments into n functions
+                                                                                                                                               // function sendEmail(to,subject,body)
 // {
-//     const readyPizza = new Promise(function(resolve,reject){
-//         setTimeout(()=>{
-//             resolve("your pizza is ready");
-//         },5000)
-//     })
-//     console.log("wooo")
-//     return readyPizza;
+//     console.log(`Email send to: ${to} with subject: ${subject} having body: ${body}`);
 // }
 
-// async function getPromiseData(){
-//     const cheese = await getCheese();
-//     console.log(cheese)
-//     const dough = await makeDough(cheese);
-//     console.log(dough)
-//     const pizza = await bakePizza(dough);
-//     console.log(pizza)
-//     console.log("delivered....");
-// }
+// sendEmail("promiljain11@gmail.com","offer letter","Congratulation promil... you are selected in Amazon");
 
-// getPromiseData();
+// this is called curring-->
+// function sendEmail(to)
+// {
+//     return function subject(subject)
+//     {
+//         return function body(body)
+//         {
+//             console.log(`Email send to: ${to} with subject: ${subject} having body: ${body}`);
+//         }
+//     }
+// }
+// sendEmail("promiljain11@gmail.com")("offer letter")("Congratulation promil... you are selected in Amazon")
+// console.log("END");
