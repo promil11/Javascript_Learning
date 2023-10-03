@@ -1,165 +1,128 @@
-// Map/////////////
-// the map function create a new instances with the result of calling function on every element in the calling array
+// DOM MANIPULATION
 
-// 1)Map in Array
-// const array = [5,3,7,2,9];
-
-// function manipulate(){
-//     let arrayResult = array.map((value)=>{
-//         return value*2;
-//     })
-//     return arrayResult
-// }
-
-// const finalResult = manipulate();
-// console.log(finalResult) //return array
-// for(let i in finalResult)console.log(finalResult[i]) //10 6 14 4 18
+// 1)accessing html element
+// console.log(document.body)
+// a)document.getElementById(ID)
+// b)document.getElementsByClassName(classname) //return arrayof HTMLCollection
+// c)document.getElementsByTagName(tagName)  //return arrayof HTMLCollection
+// d)document.querySelector(id,classname,tagname);
+// e)document.querySelectorAll(id,tagName,classname) //return arrayof NodeList
 
 
-// 2)map in Object
-// let myObject = {
-//     name: "promil",
-//     company: "CIS",
-//     age: 23,
-//     location: "Indore",
-//     innerObject: {
-//         fullName: "promil jain",
-//         inter: "qodeleaf",
-//         location: "bhopal",
-//     },
-//     car: "audi"
-// }
-// it is not directly we are using map on object throw error myObject.map is not a function
-// function manipulateObject() {
-//     const arrayResult = myObject.map((value)=>{
-//         return value;
-//     })
-//     return arrayResult
-// }
+// const fetchSpecialClass = document.getElementsByClassName("special")
+// console.log(fetchSpecialClass);
 
-// const finalResult = manipulateObject()
-// console.log(finalResult)
+// const fetchNotSpecialClass = document.querySelectorAll(".container .notSpecial")
+// console.log(fetchNotSpecialClass);
 
-// SOLUTION:IMPORTANT
-// function manipulateObject() {
-//     const  arrayResult = Object.keys(myObject).map((key)=>{
-//         return myObject[key]
-//     })
-//    return arrayResult
-// }
-// const finalResult = manipulateObject()
-// for(let i in finalResult)console.log(finalResult[i])
+// const fetchAllDivTag = document.getElementsByTagName("div")
+// console.log(fetchAllDivTag);
 
 
+// 2)mordify HTML
+// a)changing HTML contain using innerHTML
+// const changeBox = document.getElementById("box-1")
+// changeBox.innerHTML = "heyy Box1 i am changed...."
 
-// SET/////
-// const setObject = new Set([1,1,2,3,5])  iska mtlb 0th index pr ek array h
+// a)changing attribute value
+// const changeBox = document.getElementById("box-4")
+// changeBox.style.color = "red"
+// changeBox.id = "box-5"
 
-// console.log(setObject.delete(5)) //some method you can see from prototype in console
-// console.log(setObject)
+// c)modify class in HTML
+// const changeBox = document.getElementById("box-4")
+// -->// changeBox.classList.add("newClass")
+// -->// changeBox.classList.remove("notSpecial")
 
-//1) for(let value of setObject)console.log(value) //iteration in set for-of
-
-//2) const setResult = setObject.forEach((value)=>{ //iteration in set foreach 
-//     console.log(value)
+// -->//document.getElementById("toggle").addEventListener('click',()=>{
+//     const changeBox = document.getElementById("box-4")
+//     changeBox.classList.toggle("toggleClass")
 // })
-// console.log(setResult) //forloop doesn't return anything ie undefined
+
+// d)Create and appending HTML element
+// const newPara = document.createElement("p");
+// newPara.innerText = "heyy this is new paragrapgh create by createChild and append by appendChild"
+
+// const container = document.getElementById("container")
+// container.appendChild(newPara)
 
 
-// const setObject = new Set()  
+// syntax, variable, comments, statements
 
-// setObject.add({name : "promil", company : "CIS"})
-// setObject.add(2)
-// setObject.add([1,1,2,3,5])
+// const/let a = 5;
+// const/let b = a + 6;
+// console.log(b);
 
-// console.log(setObject) //{{object},2,array(5)}  iska mtlb 0th index pr object , 1th index pr 2 ,2nd index pr array
+// let person = "promil"
+// carName = "AUDI"   //here js compiler gives an error carName is not define
+// price = "100M"
 
-// for(let value of setObject)console.log(value)  //{name: 'promil', company: 'CIS'}  2  [1, 1, 2, 3, 5]
+// console.log("car name : " + carName + " owned by: " + person);
 
+// solution is:
 
-//MAP//////  get and set method  
-// const  mapObject = new Map()
-// mapObject.set('name',"promil") //set the key value in map
-// mapObject.set('company',"CIS")
-// mapObject.set('a',48)
-// mapObject.set("myObject",{
-//         name: "promil",
-//         company: "CIS",
-//         age: 23,
-//         location: "Indore",
-//         innerObject: {
-//             fullName: "promil jain",
-//             inter: "qodeleaf",
-//             location: "bhopal",
-//         },
-//         car: "audi"
-//     })
+// let person = "promil"
+// let carName = "AUDI"
+// let price = "100M"
 
-// console.log(mapObject) //{'name' => 'promil', 'company' => 'CIS', 'a' => 48}
-// console.log(mapObject.get('name'))   //promil   //to get value through hashkey
+// console.log("car name : " + carName + " owned by: " + person);
 
-// mapObject.delete('a') //delete an hashkey from map
-// console.log(mapObject)
+// or you can write this:
 
-// console.log(mapObject.get('myObject').location) //Indore 
+// let person = "promil",
+// carName = "AUDI",
+// price = "100M"
 
+// console.log("car name : " + carName + " owned by: " + person);
 
+// const a = 5, b=6;  //its works a and b both are constant
+// // b=7 //error const variables are not reassigned
+// console.log(a+b)
 
-// Find, FindIndex, keys, endsWith, startsWith///////
+// let b,c;
+// let a=b=c=5;
+// console.log(typeof(a))   //number
+// console.log(a); //5
 
-//1) const myArray = [2,6,4,7,5,8]
-// const result = myArray.find((number)=>{
-//     if(number>6)return number;
-// })
-// console.log(result)
+// only (A-Z or a-z or _ or $) are alowed for first letter in variable
+// let 1promil = "promil" //throw error
+// console.log(1promil) 
 
-
-// QUESTION:How to find an object in an Array of objects?
-// a)using find() 
-// b)using findIndex()
-// c)using filter()
-
-// const carList = [{ id:13, brand: "BMW", model: "X5", price:"$23000", release_date:"2015-10-12"},
-
-//                  { id:9, brand: "Audi", model: "S3", price:"$35000", release_date:"2013-08-23"},
-
-//                  { id:11, brand: "Bugatti", model: "Veyron", price:"$500000", release_date:"2006-02-10"},
-                 
-//                  { id:7, brand: "VW", model: "Polo", price:"$80000", release_date:"2018-05-03"},
-                
-//                  { id:4, brand: "Fiat", model: "Punto", price:"$60000", release_date:"2017-01-25"},
-                 
-//                  { id:12, brand: "Audi", model: "S6", price:"$45000", release_date:"2018-08-23"}
-//                 ];
-
-                // b)using findIndex()
-// const searchIndex = carList.findIndex((car)=> car.model=='Polo')
-// console.log(carList[searchIndex].release_date)
-
-                // a)using find() 
- 
-// const searchFind = carList.find((car)=>car.price > "$23000")
-// console.log(searchFind)
+// javascript are case sensitive
+// const myName = " promil ";
+// const MyName = " subhi ";
+// console.log(myName); //promil
+// console.log(MyName); //subhi
 
 
-// Array.filter() to find multiple objects
-// const searchFilter = carList.filter((car)=> car.price > "$35000")
-// console.log(searchFilter)   //return array of object
 
-// end With and start With
-// The endsWith() method of String values determines whether a string 
-// ends with the characters of this string, returning true or false as appropriate.
-// const myArray = [1,2,3,4,5]  //error  myArray.endsWith is not a function 
-// console.log(myArray.endsWith('5'))
-
-// const myString = "promil jain  "
-// console.log(myString.endsWith('jain')) //false
-// console.log(myString.endsWith(' ')) //true
+// javascript DATATYPE:
+// 1)Number
+// 2)String
+// 3)Boolean 
+// 4)null
+// 5)undefined
+// 6)Array
+// 7)Object
 
 
-// The startsWith() method of String values determines whether this string begins with 
-// the characters of a specified string, returning true or false as appropriate.
+// // when decleared but not initialized then in this case it will show undefined
+// let value;
+// console.log(value) //undefined
 
-// const myString = "promil jain  "
-// console.log(myString.startsWith('promil')) //true
-// console.log(myString.startsWith('jain',7)) //true
+// // when decleared and initialized with null keyword then in this case it will show null 
+// let valueNew = null;
+// console.log(valueNew); //null
+
+// // IMPORTANT about NULL and undefined
+// console.log(typeof(valueNew) == "null" ); 
+// // return false because type of null is object
+
+// console.log(typeof(undefined) == "undefined");
+// // return true because type of undefined is undefined
+
+// console.log(undefined == null) 
+// // return true
+
+// console.log(undefined === null) 
+// // return false
