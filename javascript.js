@@ -1,122 +1,22 @@
+// Map/////////////
+// the map function create a new instances with the result of calling function on every element in the calling array
 
-// USE STRICT MODE//////////
-// 1)"use strict"
-// let x =7;
-// delete  x //delete of an variable in  strict mode are not allowed  it gives an error
+// 1)Map in Array
+// const array = [5,3,7,2,9];
 
-// 2) "use strict"
-// myName = "promil"  
-// console.log(myName)  //its give an error myName is not define
-
-// 3)"use strict"
-// function sum(x,x)
-// {
-//     console.log(x+x) //duplicate parameter name are not allowed in this context
+// function manipulate(){
+//     let arrayResult = array.map((value)=>{
+//         return value*2;
+//     })
+//     return arrayResult
 // }
 
-// sum(6,5)
+// const finalResult = manipulate();
+// console.log(finalResult) //return array
+// for(let i in finalResult)console.log(finalResult[i]) //10 6 14 4 18
 
 
-// IMPORTANT POINT
-// The this keyword in functions behaves differently in strict mode.
-
-// The this keyword refers to the object that called the function.
-
-// If the object is not specified, functions in strict mode will return undefined and functions in normal mode will return the global object (window):
-// 4)"use strict"
-// function myFun() {
-//     console.log(this)  //print undefined
-// }
-// myFun();
-
-
-// 5)we can add use strict mode particular function also
-// x=5;
-// function myFun()
-// {
-//     "use strict"
-//     y=6;
-//     console.log(y)
-// }
-// console.log(x)  //print 5
-// myFun()  //error y is not defined
-
-
-// "use strict"
-// myFunc()
-// console.log(x)  
-
-// function myFunc() {
-//     console.log("working...")
-// }
-
-// var x = 10 //undefined
-// let x = 10 //cannot accessed before initialising
-
-
-//spread operator and rest operator
-//spread
-// const array =[1,2,3,4,"promil"]
-// console.log(...array)  //1 2 3 4 'promil'  basically spread values
-
-// rest
-// function  myFunc(...args){
-//     console.log(args)  //when ... are used in parameter then it is rest operator and return array ie [1,4,3,6,5]
-//     let sum=0
-//     for(let i of args ){
-//         sum +=  i;
-//     }
-//     return sum
-// }
-
-// console.log(myFunc(1,4,3,6,5))
-
-
-// TASK -->product first two value and rest are addition 
-// const array =[3,2,4,1,5]
-
-// const [val1, val2, ...sumValues] = array
-// // console.log(...sumValues)  //4 1 5
-// // console.log(sumValues)  //[4,1,5]
-
-// function product(a,b) {
-//     return a*b;
-// }
-
-// function sum(...sumValues)
-// {
-//     let s=0;
-//     // console.log(...sumValues) //4 1 5
-//     // console.log(sumValues)   //[4,1,5]
-//     for(let i of sumValues)
-//     {
-//         s += i;
-//     }
-//     return s;
-// }
-
-// // console.log(product(val1,val2)) //6
-// // console.log(sum(...sumValues))  //10
-
-// let arrayResult = [product(val1,val2), sum(...sumValues)]
-// console.log((arrayResult))  //[6,10]
-
-
-// IMPORTANT NOTE :
-// ENUMERABLE   meaning that a property can be viewed if it is iterated using the for-in loop
-// : Properties that are created using the defineProperty() method have the enumerable flag set to false.
-
-
-// LOOP IN javascript:
-
-// function myFunc(...arguments){
-//     for(let i of arguments)console.log(i)
-// }
-
-// myFunc(1,2,3,4)
-
-
-// OBJECT
+// 2)map in Object
 // let myObject = {
 //     name: "promil",
 //     company: "CIS",
@@ -129,77 +29,137 @@
 //     },
 //     car: "audi"
 // }
-
-// 1 case:  for-in can we use in object 
-// for(let key in  myObject)
-// {
-//     console.log(`${key} : ${myObject[key]}`)
-// } 
-
-// 2 case: for-of cannot we use in object because for-of are only applicable in iterating object ie array, string, map, set
-// for(let key of  myObject)
-// {
-//     console.log(`${key} : ${myObject[key]}`)
+// it is not directly we are using map on object throw error myObject.map is not a function
+// function manipulateObject() {
+//     const arrayResult = myObject.map((value)=>{
+//         return value;
+//     })
+//     return arrayResult
 // }
 
-// 3 case: but there is syntax where we are using for-of in object
-// for(let [key,value] of Object.entries(myObject))
-// {
-//     console.log(`${key} : ${value}`)
+// const finalResult = manipulateObject()
+// console.log(finalResult)
+
+// SOLUTION:IMPORTANT
+// function manipulateObject() {
+//     const  arrayResult = Object.keys(myObject).map((key)=>{
+//         return myObject[key]
+//     })
+//    return arrayResult
 // }
-
-
-// ARRAY
-// const array = [3,4,"subhi",5,1,"promil"]
-// for(let i in array)console.log(i) //print index --> 0 1 2 3 4 5
-
-// const Array = [3,4,"subhi",5,1,"promil"]
-// for(let i of Array)console.log(i) //print values of index 3 4 "subhi" 5 1 "promil"
-
-
-//STRING
-// const stringValue = "GOOGLE"
-// for(let i in stringValue)console.log(i) // 0 1 2 3 4 5
-
-// const stringValue = "GOOGLE"
-// for(let i of stringValue)console.log(i) // G O O G L E
+// const finalResult = manipulateObject()
+// for(let i in finalResult)console.log(finalResult[i])
 
 
 
+// SET/////
+// const setObject = new Set([1,1,2,3,5])  iska mtlb 0th index pr ek array h
 
-// EXTRA KNOWLEDGE
-// let myObject = {
-//     name: "promil",
-//     company: "CIS",
-//     age: 23,
-//     location: "Indore",
-//     innerObject: {
-//         fullName: "promil jain",
-//         inter: "qodeleaf",
-//         location: "bhopal",
-//     },
-//     car: "audi"
-// }
+// console.log(setObject.delete(5)) //some method you can see from prototype in console
+// console.log(setObject)
 
-// defineProperty() method
-// // by default enumerable is true but we can set enumerable by defineProperty method
-// Object.defineProperty(myObject, "innerObject", {
-//     enumerable : false
+//1) for(let value of setObject)console.log(value) //iteration in set for-of
+
+//2) const setResult = setObject.forEach((value)=>{ //iteration in set foreach 
+//     console.log(value)
 // })
-// // now it will hide not display in loop
-
-// for(let i in myObject)
-// {
-//     console.log(myObject[i])
-// } 
-// console.log(myObject)
-// ie print promil CIS 23 Indore audi
+// console.log(setResult) //forloop doesn't return anything ie undefined
 
 
-// propertyIsEnumerable() method
-// console.log(myObject.propertyIsEnumerable("innerObject"))  //true
+// const setObject = new Set()  
 
-// getOwnPropertyDescriptors() method
-// const allProperty = Object.getOwnPropertyDescriptors(myObject)
-// console.log(allProperty) 
-// return configurable, enumerable, value, writable
+// setObject.add({name : "promil", company : "CIS"})
+// setObject.add(2)
+// setObject.add([1,1,2,3,5])
+
+// console.log(setObject) //{{object},2,array(5)}  iska mtlb 0th index pr object , 1th index pr 2 ,2nd index pr array
+
+// for(let value of setObject)console.log(value)  //{name: 'promil', company: 'CIS'}  2  [1, 1, 2, 3, 5]
+
+
+//MAP//////  get and set method  
+// const  mapObject = new Map()
+// mapObject.set('name',"promil") //set the key value in map
+// mapObject.set('company',"CIS")
+// mapObject.set('a',48)
+// mapObject.set("myObject",{
+//         name: "promil",
+//         company: "CIS",
+//         age: 23,
+//         location: "Indore",
+//         innerObject: {
+//             fullName: "promil jain",
+//             inter: "qodeleaf",
+//             location: "bhopal",
+//         },
+//         car: "audi"
+//     })
+
+// console.log(mapObject) //{'name' => 'promil', 'company' => 'CIS', 'a' => 48}
+// console.log(mapObject.get('name'))   //promil   //to get value through hashkey
+
+// mapObject.delete('a') //delete an hashkey from map
+// console.log(mapObject)
+
+// console.log(mapObject.get('myObject').location) //Indore 
+
+
+
+// Find, FindIndex, keys, endsWith, startsWith///////
+
+//1) const myArray = [2,6,4,7,5,8]
+// const result = myArray.find((number)=>{
+//     if(number>6)return number;
+// })
+// console.log(result)
+
+
+// QUESTION:How to find an object in an Array of objects?
+// a)using find() 
+// b)using findIndex()
+// c)using filter()
+
+// const carList = [{ id:13, brand: "BMW", model: "X5", price:"$23000", release_date:"2015-10-12"},
+
+//                  { id:9, brand: "Audi", model: "S3", price:"$35000", release_date:"2013-08-23"},
+
+//                  { id:11, brand: "Bugatti", model: "Veyron", price:"$500000", release_date:"2006-02-10"},
+                 
+//                  { id:7, brand: "VW", model: "Polo", price:"$80000", release_date:"2018-05-03"},
+                
+//                  { id:4, brand: "Fiat", model: "Punto", price:"$60000", release_date:"2017-01-25"},
+                 
+//                  { id:12, brand: "Audi", model: "S6", price:"$45000", release_date:"2018-08-23"}
+//                 ];
+
+                // b)using findIndex()
+// const searchIndex = carList.findIndex((car)=> car.model=='Polo')
+// console.log(carList[searchIndex].release_date)
+
+                // a)using find() 
+ 
+// const searchFind = carList.find((car)=>car.price > "$23000")
+// console.log(searchFind)
+
+
+// Array.filter() to find multiple objects
+// const searchFilter = carList.filter((car)=> car.price > "$35000")
+// console.log(searchFilter)   //return array of object
+
+// end With and start With
+// The endsWith() method of String values determines whether a string 
+// ends with the characters of this string, returning true or false as appropriate.
+// const myArray = [1,2,3,4,5]  //error  myArray.endsWith is not a function 
+// console.log(myArray.endsWith('5'))
+
+// const myString = "promil jain  "
+// console.log(myString.endsWith('jain')) //false
+// console.log(myString.endsWith(' ')) //true
+
+
+// The startsWith() method of String values determines whether this string begins with 
+// the characters of a specified string, returning true or false as appropriate.
+
+// const myString = "promil jain  "
+// console.log(myString.startsWith('promil')) //true
+// console.log(myString.startsWith('jain',7)) //true
