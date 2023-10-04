@@ -1,245 +1,172 @@
+// IIFE to make separate execution container apart from global 
+// (
+//     function(){
+//         console.log("IIFE run")
+//         let title = "IIFE learning"
+//         function getTitle(){
+//             console.log(title)
+//         }
+//         getTitle()
+//     }
+// )();
 
-// IMPORT EXPORT 
-// import { myName,showName } from "./exportJavascript.js";
+// (
+//     function(){
+//         console.log("IIFE run")
+//         let title = "IIFE learning"
+//         function getTitle(){
+//             console.log(window.title) //give error reference 
+//         }
+//         getTitle()
+//     }
+// )();
 
-// console.log(myName)
-// console.log(showName());
+// let car = (
+//     function()
+//     {
+//         let carName = "Audi"
+//         return carName;
+//     }
+// )();
+// console.log(car) //Audi
 
-// import appName, {addition, substraction } from "./exportJavascript.js";
-// console.log(appName)
-// console.log(addition(5,7));
-// console.log(substraction(5,7));
-
-// time difference between hoisting and value assign is known as temporal dead zone
-// three type of error :
-// 1)ReferenceError
-// 2)SyntaxError
-// 3)TypeError
-
-// ReferenceError--->
-// console.log(x)
-// let a = 10
-// var b = 30
-
-// SyntaxError
-// let a = 10
-// let a =20
-
-// TypeError
-// const  a;
-// a = 5; 
+ //IIFE+CLOUSER  to form private variable
+// let car = (
+//     function(){
+//         let carName = "Audi"
+//         return {
+//             set setCarName(name){
+//                 carName = name
+//             },
+//             get getCarName(){
+//                 return carName
+//             }
+//         }
+//     }
+// )();
+// console.log(car.getCarName)
 
 
-//ClASS IN JAVASCRIPT 
-// NOTE:The body of a class is executed in strict mode even without the "use strict" directive.
-// NOTE:The body of a class is executed in strict mode even without the "use strict" directive.
 
-// before ECMA6
-// function pen(name,color,price)
-// {
-//     this.name = name
-//     this.color = color
-//     this.price = price
+
+           //EXTRA UNDERSTANDING
+             
+// INFINITY / -INFINITY / isNAN / NaN
+// console.log(1/0) //infinity
+// console.log(-1/0) //-INFINITY
+// console.log(1*"promil") //NAN
+
+
+// console.log(typeof(undefined)) //undefined
+// console.log(typeof(null)) //object
+// console.log(typeof(1)) //number
+// console.log(typeof("string")) //string
+// console.log(typeof([undefined,1,"subhi"])) //object
+// console.log(typeof({name:"promil",company:"CIS"})) //object
+
+// console.log(typeof Array) //function
+// console.log(typeof Object) //function
+// console.log(Array())
+// console.log(Object()) 
+
+
+// let car = (
+//     function(){
+//         let carName = "Audi"
+//         return {
+//             set setCarName(name){
+//                 carName = name
+//             },
+//             get getCarName(){
+//                 return carName
+//             }
+//         }
+//     }
+// )();
+// console.log(car.getCarName)
+
+
+// (   
+//     function(){
+//         console.log("IIFE run")
+//         let title = "IIFE learning"
+//         function getTitle(){
+//             console.log(title)
+//         }
+//         getTitle()
+//     }
+// )();
+
+
+// higher order function
+// function callBackFunction(){
+//     console.log("call back function....")
 // }
 
-// const pen1 = new pen("gel", "red", 500)
-// console.log(pen1)
-
-// //add function to pen1 object
-
-// pen.prototype.showDetail = function(){
-//     console.log(`${this.name},${this.color},${this.price}`)
+// function higherOrderFunction(callFun){
+//     console.log("call higher order function")
+//     callFun()
 // }
 
-// console.log(pen1)
-// pen1.showDetail()
-// console.log(pen) //it will print pen function 
+// higherOrderFunction(callBackFunction)
 
-
-// after ECMA6 class concept come in picture
-/////////////it is more understandable syntax of oops concept
-// class Pen {
-//     constructor(name,color,price){
-//         this.name = name
-//         this.color = color
-//         this.price = price
-//     }
-
-//     showDetail(){
-//         console.log(`${this.name},${this.color},${this.price}`)
-//     }
-// }
-
-// const pen1 = new Pen("marker","blue","50rs")
-// console.log(pen1.showDetail())
-// console.log(Pen) //return full class
-// console.log(Pen.showDetail()) //error Pen.showDetail is not a function
-// //add function to pen1 object
-
-
-// Declaration
-// console.log(rectangleClass) // in let Cannot access 'rectangleClass' before initialization
-//                             // and in var it return undefined
-// class Rectangle {
-//     constructor(height, width) {
-//       this.height = height;
-//       this.width = width;
-//     }
-//   } 
-
-//   //expression with class name
-// var rectangleClass = class Rectangle {
-//     constructor(height, width) {
-//       this.height = height;
-//       this.width = width;
-//     }
-//   }
-  
-// console.log(rectangleClass)
-
-//expression with anonymous class
-// var rectangleClass = class  {
-//     constructor(height, width) {
-//       this.height = height;
-//       this.width = width;
-//     }
-//     display() {
-//         h = this.height;  //it will throw an errror because The body of a class is executed in strict mode even without the "use strict" directive.
-//         w = this.width;
-
-//         SOLUTION:
-//         // let h = this.height; 
-//         // let w = this.width;
-
-//         console.log(h*w)
-//     }
-//   }
-  
-//   const classObject = new rectangleClass(5,6);
-//   console.log(classObject.display())
-
-// GETTER / SETTER 
-
-// class Pen {
-//     constructor(name,color){
-//         this.name = name
-//         this.color = color
-//     }
-
-//     get showDetail(){ //getter must have exactly zero parameters
-//         console.log(`${this.name},${this.color},${this.price}`)
-//     }
-
-//     set setPrice(price){  //set exactly must have on formal parameter
-//         this.price = price
+// function callBackFunction(){
+//     return function(){
+//         console.log("call back function....")
 //     }
 // }
 
-// const pen1 = new Pen("marker","blue")
-// pen1.setPrice = 100
-// console.log(pen1)
-
-// delete pen1.showDetail
-// console.log(pen1.showDetail) //delete getter function 
-
-
-// direct add function
-// class demo {
-//      get getFunction()
-//      {
-//         console.log("getter function...")
-//      }
+// function higherOrderFunction(callFun){
+//     console.log("call higher order function")
+//     const returnedFunc = callFun()
+//     console.log(returnedFunc)
+//     returnedFunc()
 // }
 
-// const demoObject = new demo()
-// console.log(demoObject)
-// console.log(demoObject.getFunction)
-
-// // add function using prototype
-// class newDemo {
-
-// }
-
-// const newDemoObject = new newDemo()
-// console.log(newDemoObject)
-
-// newDemo.prototype.getNewFunction = function() {  //it act as a normal function in class
-//     console.log("new getter function....")
-// }
-// console.log(newDemoObject.getNewFunction())
-
-// // add function using defineProperty
-// class defineClass {
-
-// }
-
-// const defineObject = new defineClass()
-// console.log(defineObject)
-
-// Object.defineProperty(defineObject, "defineFunction", {value: function(){console.log("add function by defineProperty")}})
-// console.log(defineObject.defineFunction())
+// higherOrderFunction(callBackFunction)
 
 
-// set setter function in object using computed property name 
-// const compLanguage = "myLanguage"
-// const language = {
-//     set [compLanguage](name){
-//         this.myArray.push(name)
-//     },
-//     myArray:[]
-// }
 
-// language[compLanguage] = "c++"
-// language[compLanguage] = "Javascript"
-// console.log(language.myArray) //['c++',"javascript"]
+// const myArray = new Array(null) //prototype array   //phle index pr null aa jayega
+// console.log(myArray)
 
-
-// static method
-                 // NOTE:
-// 1)static member can be changeable
-// 2)each class has its own container to store static data  and 
-// if another class extend the parent class then child class have its own 
-// container to store static member also refer to the container of the parent.  
-// 3)if a static member are in parent and we try to access from child class then it first check
-// to child static container and then referred to the parent static container 
-//4)if we try to access static member having in child class from parent class then it will return undefined 
-// 5)static method only call static member
-class ClassWithStaticField {
-    static staticField;
-    static staticFieldWithInitializer = "static field";
-    static staticField = "parentStatic"
-    myName = "promil"
-
-    // Calling static members from another static method
-    static mtFunc(){
-        console.log(this.myName) //it will return undefine
-    }
-  }
-  
-  class SubclassWithStaticField extends ClassWithStaticField {
-    static subStaticField = "subclass field";
-    static staticField = "childStatic";
-    static subStaticField = "subclass field1";
-  }
-// console.log(SubclassWithStaticField.staticFieldWithInitializer)
-// console.log(ClassWithStaticField.staticField)
-// console.log(ClassWithStaticField.subStaticField)
-// ClassWithStaticField.staticField = "changeparentmember"
-// console.log(ClassWithStaticField.staticField)
-
-// const newObject = new ClassWithStaticField()
-// console.log(newObject.staticField) //we cannot access static member or method bu object only classname
-
-const parentObject = new ClassWithStaticField()
-console.log(parentObject)
-
-const childObject = new SubclassWithStaticField()
-console.log(childObject)
-
-// parentObject.mtFunc // promil
-ClassWithStaticField.mtFunc()
+// const myArray = new Array(2,"string",{},[]) //prototype array 
+// console.log(myArray)
 
 
 
 
+// const myObject = new Object([]) //prototype object
+// // myObject.name = "promil"
+// console.log(typeof myObject, myObject)
 
+// const myObject = new Object(1) //prototype object
+// // myObject.name = "promil"
+// console.log(typeof myObject, myObject)
+
+// in null and undefined it will create a empty Object
+// const myObject = new Object(undefined) //prototype object
+// myObject.name = "promil"
+// console.log(myObject)
+// const myObject = new Object(null) //prototype object
+// myObject.name = "promil"
+// console.log(myObject)
+
+const myObject = new Object("w") //prototype object
+myObject.name = "promil"
+console.log(myObject)
+
+// const myObject = new Object({key1:"pro1"}) //prototype object
+// myObject.name = "promil"
+// console.log(myObject)
+
+// const myObject = new Object(1,["array1"],{name:"promil"}) //prototype object
+// console.log(myObject)
+
+
+
+((...arg)=> {
+  console.log(...arg);
+})("RAM", "2GB");
+
+(console.log)("RAM", "2GB");
