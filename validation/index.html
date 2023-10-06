@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head> 
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>REGISTRATION FORM</h1>
+        </div>
+        <form id="form">
+
+            <div class="innerdiv" id="div1">
+                <label for="username">Username</label>
+                <input type="text" name="myUsername" id="username" placeholder="Enter Your Fullname" autocomplete="false">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small>ERROR MSG</small>
+            </div>
+
+            <div class="innerdiv" id="div2">
+                <label for="email">Email</label>
+                <input type="email" name="myemail" id="email" placeholder="Enter Your Email" autocomplete="false">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small>ERROR MSG</small>
+            </div>
+
+            <div class="innerdiv" id="div3">
+                <label for="phonenumber">Phone Number</label>
+                <input type="text" name="myphone" id="phonenumber" placeholder="Enter Your PhoneNumber" autocomplete="false">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small>ERROR MSG</small>
+            </div>
+
+            <div class="innerdiv" id="div4">
+                <label for="password">Password</label>
+                <input type="password" name="mypassword" id="password" placeholder="Enter Your Password" autocomplete="false">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small>ERROR MSG</small>
+            </div>
+
+            <div class="innerdiv" id="div5">
+                <label for="confirmpassword">Password Check</label>
+                <input type="password" name="myconfirmpassword" id="confirmpassword" placeholder="Confirm Password" autocomplete="false">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small>ERROR MSG</small>
+            </div>
+
+            <div class="innerdiv color">
+                <button id="submit">
+                    SUBMIT
+                </button>
+            </div>
+
+            <div class="displayDiv"></div>
+
+        </form>
+    </div>
+    <script type="module" src="jquery.js"></script>
+</body>
+</html>
