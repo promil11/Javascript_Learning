@@ -1,423 +1,485 @@
-// IMPORTANT LINKS
-// https://www.javascripttutorial.net/javascript-this/
-// https://www.javascripttutorial.net/javascript-anonymous-functions/
-// https://www.javascripttutorial.net/javascript-arrow-function/
-
-
-
-// // function a(){
-//     function b() {
-//         function c() {
-//             console.log(this === window)  //true
-//         }
-//         c()
-//     }
-//     b()
-// }
-// a()
-
-
-// let counter = {
-//      count : 0,
-//      incre : function () {
-//         console.log(this === window) // false
-//         console.log(this === counter) // true
-//      }
+// async/await
+// NOTE 1) async function always return a Promise
+// async function myFun() {
+//     return "promise aa gya"  //ither to string return ki h ? to promise return kesse hua ? 
+//     // answer is:agr apn async function me promise return nhi kr rhe to in this case vh khud
+//     //  ek promise bna lega usme meri value rkh dega aur promise return kr dega 
+//     // lekin async hmesha promise return krega
 // }
 
-// counter.incre()
-
-// "use strict"
-// console.log(this === window) // in global execution context use strict and without use strict behave the same  return true
-
-
-// function Car(brand) {
-//     this.brand = brand;
-// }
-
-// Car.prototype.getBrand = function () {
-//     console.log(this === car)  //true
-//     return this.brand;
-// }
-
-// let car = new Car('Honda');
-// console.log(car.getBrand());  //Honda
-
-
-// function Car(brand){
-//     this.brand = brand
-//     console.log(this === window)
-// }
-
-// let bmw = Car("BMW")
-// console.log(bmw.brand)  //TypeError: Cannot read properties of undefined (reading 'brand')
-
-
-// function Car(brand) {
-//     if(this instanceof Car)
-//         {
-//             this.brand = brand
-//             this.getCar = function() {
-//             return this.brand
-//         }
-//     }
-//     else{
-//         throw Error("Must use the new operator to call the funtion")
-//     }
-// }
-
-// let car = new Car("honda")
-// console.log(car.getCar())
-// // let car = Car("honda")
-// // console.log(car.getCar())
-
-// function a(){
-
-// }
-// console.log(typeof a)
-
-
-// let a = (function () {
-//     console.log('anonymous function')
+// let data = myFun()
+// console.log(data) //give here promise
+// data.then((resultData)=>{
+//     console.log(resultData)   //promise aa gya
 // })
-// a()
 
 
-// why we are not using two IIFE ????? because we are not using ; 
-// (function (name) {
-//     console.log('anonymous function ' + name)
-// })("promil");
+// now we have create promise and then return it from async function
+// function returnPromise() {
+//     let promise = new Promise((resolve, reject)=>{
+//         if(1 == 1)return resolve("resolved Promise")
+//         return reject("rejected Promise")
+//     }) 
+//     return promise
+// }
 
-// (console.log)("console function");
+// async function getData() {
+//     return returnPromise()
+// }
+
+// let getDataObj = getData()
+
+// console.log(getDataObj)
+
+// getDataObj.then((resultData)=>{
+//     console.log(resultData)
+// })
+
+// await//  -->can only write inside the async function
+// function returnPromise() {
+//     let promise = new Promise((resolve, reject)=>{
+//         if(1 == true) return resolve("promise resolved")
+//         return reject("promise rejected")
+//     })
+//     return promise
+// }
+
+// async function getPromise() {
+//     let getData = await returnPromise() //await means js engine wait here until response get and once it get promise await automatically return resolve or reject value
+//     console.log(getData)  //ie return promise resolved
+// }
+
+// getPromise()
+
+// NOW PLAY WITH NORMAL PROMISE AND ASYNC AWAIT
+// function returnPromise() {
+//     let promise = new Promise((resolve, reject)=>{
+//         setTimeout(()=>{
+//             if(1 == true) return resolve("promise resolved")
+//             return reject("promise rejected")
+//         },3000)
+//     })
+//     return promise
+// }
+
+// function getData() {
+//     returnPromise().then((data)=> console.log(data))
+//     console.log("after return promise this functionality should be run....")
+// }
+
+// getData()
+// OUTPUT: which is wrong
+// after return promise this functionality should be run....
+// promise resolved
+
+// Solution:
+// function returnPromise() {
+//     let promise = new Promise((resolve, reject)=>{
+//         setTimeout(()=>{
+//             if(1 == true) return resolve("promise resolved")
+//             return reject("promise rejected")
+//         },3000)
+//     })
+//     return promise
+// }
+
+// async function getData() {
+//     let data = await returnPromise() //js engine ko ither hi wait krne ka bolega
+//     console.log(data)
+//     console.log("after return promise this functionality should be run....")
+//     setTimeout(()=>{
+//         console.log("settimeout console print....")
+//     },4000)  //why it takes alg se 4 sec??? kyuki JS engine stop interpreter at line 513(await vali line pr)
+// }
+
+// getData()
+// OUTPUT:
+// promise resolved
+// after return promise this functionality should be run....
+
+// NOTE:esse agr await valli chiz bhut time le resolve hone me then uss case me call stack block ho jayega?
+// hn hota h block lekin server related chize block nhi hoti h jesse dusri request bhejna and all...
+
+// CONCLUSION: .then() cannot wait for response if age niche kuch console likha ho to vo phle print kr degi
+        // BUT await literally stop the interpreter untill the response not get. and then run niche valle console
 
 
-// argument me object, function as a object  bhi pass kr shkte h
+// using multiple await inside async
+// function returnPromise(boo) {
+//     let promise = new Promise((resolve, reject)=>{
+//         setTimeout(()=>{
+//             if(1 == boo) return resolve("promise resolved")
+//             return reject("promise rejected")
+//         },3000)
+//     })
+//     return promise
+// }
 
-// let obj = {
-//     name : "promil",
-//     company : "CIS",
-// };
+// async function getData() {
+//     let data = await returnPromise(true) 
+//     console.log(data)
+//     console.log("after return promise this functionality should be run....")
+//     setTimeout(()=>{
+//         console.log("settimeout console print....")
+//     },3000)  
 
-// (function(myObj) {
-//     console.log(myObj.name , myObj.company)
-// })(obj);
+//     // IMPORTANT NOTE HERE: if promise return reject response then next or below lines are not run.
+//     // ie output will be:
+//     // promise resolved
+//     // after return promise this functionality should be run....
+//     // settimeout console print....
+//     // Uncaught (in promise) promise rejected 
+
+//     // let data2 = await returnPromise(false)  
+//     // console.log(data2)
+//     // console.log("after return promise2 this functionality should be run....")
+//     // setTimeout(()=>{
+//     //     console.log("settimeout2 console print....")
+//     // },3000)  
+
+//     let data3 = await returnPromise(true) 
+//     console.log(data3)
+//     console.log("after return promise3 this functionality should be run....")
+//     setTimeout(()=>{
+//         console.log("settimeout3 console print....")
+//     },4000)  
+
+//     // aur agr data2 ko remove kr de to output will be:
+//     // promise resolved
+//     // after return promise this functionality should be run....
+//     // settimeout console print....
+//     // promise resolved
+//     // after return promise3 this functionality should be run....
+//     // settimeout3 console print....
+// }
+
+// getData()
+
+
+// typeError  vs SyntaxError vs ReferenceError
+// console.log("runnnnnnn")
+// console.log("runnnnnnn")
+// const a = 5
+// // a = 6    //here we get type error so the interpreter return a error and return back no line below execute
+// console.log(b) // here we get referenceError so the interpreter return a error and return back no line below execute
+// console.log("runnnnnnn")
+
+// CONCLUSION:  in typeError and referenceError interpreter stop executing the code from that line and not execute below lines
+        //  but in syntaxError interpreter not execute even the single line of code of javascript
 
 
 
-// function abc() {
-//     this.val = 15;
-//     this.fun = function() {
-//         console.log("fun function....")
+// let create more complicated senario
+
+// function returnPromise(boo) {
+//     let promise = new Promise((resolve, reject)=>{
+//         if(boo){
+//             setTimeout(()=>{
+//                 resolve("promise1 solved")
+//             },5000)
+//         }
+//         else{
+//             setTimeout(()=>{
+//                 resolve("promise2 solved")
+//             },10000)
+//         }
+//     })
+//     return promise
+// }
+
+// async function getData() {
+//     console.log("inside getData function console")
+//     let data1 = await returnPromise(true)  //phle ye 5 sec lega resolve hone me 
+//     console.log(data1)
+//     console.log("promise1 console")
+
+//     let data2 = await returnPromise(false)  //fir ye alg se 10 sec lega resolve hone me
+//     console.log(data2)
+//     console.log("promise2 console")
+// }
+
+// getData()
+
+// console.log("after getData return")
+
+// setTimeout(()=>{
+//     console.log("ye print kb ho rha h???")
+//     console.log("kya ye getData pura run hoga fir print hoga??")
+// },2000)
+
+// the output is :
+// inside getData function console
+// after getData return
+// ye print kb ho rha h???
+// kya ye getData pura run hoga fir print hoga??
+// promise1 solved
+// promise1 console
+// promise2 solved
+// promise2 console
+
+// ab essa kyu ho rha h ?? phle to pura function print hona chahiye fir console aur setTimeout
+//chlna chahiye lekin essa output kyu de rha h???
+
+// ANSWER:==>kyuki JS engine kissi ke liye nhi rukta wo bss jesse hi await ko dekha vo uss function ko suspend kr deta h
+//mtlb call stack se usko remove kr dega aur ab callstack khali h to getData() ke niche ki line execute hogi that why niche ke console 
+//phle hi print ho gye before completing the full console in function getData()
+// Note that:----------->ab suspend to kr diya legin jb await resolve hoga to vapis se JS engine uss function ko call stack me daal dega 
+//aur jis line pr execution khtam kra tha vhi se start h jayega 
+
+
+// function returnPromise(boo) {
+//         let promise = new Promise((resolve, reject)=>{
+//             if(boo){
+//                 setTimeout(()=>{
+//                     resolve("promise1 solved")
+//                 },10000)
+//             }
+//             else{
+//                 setTimeout(()=>{
+//                     resolve("promise2 solved")
+//                 },5000)
+//             }
+//         })
+//         return promise
 //     }
-// }
-
-// let funObj = new abc();  //create a object of the function
-
-// (function(funObj) {
-//     console.log(funObj.val)
-//     console.log(funObj.fun())
-// })(funObj);
-
-
-//named expression function
-// let func = function myFun() {
-//     console.log("named function called")
-//     let innerFunc = myFun;
-//     // console.log(innerFunc()) //create infinite loop 
-// }
-// func()
-// myFun() // referenceError myFun is not defined because myFunc ko memory milli hi nhi
-
-
-
-// arrow function
-// function myFun(name) {
-//     this.name = name
-// }
-
-// let myFunObj = new myFun("promil")
-// console.log(myFunObj.name)
-
-
-// let myConstructor = (name, company) => {
-//     this.name = name
-//     this.company = company
-//     return {
-//         name , company
+    
+//     async function getData() {
+//         console.log("inside getData function console")
+//         let data1 = await returnPromise(true)  //phle ye 10 sec lega resolve hone me 
+//         console.log(data1)
+//         console.log("promise1 console")
+    
+// function returnPromise(boo) {
+//         let promise = new Promise((resolve, reject)=>{
+//             if(boo){
+//                 setTimeout(()=>{
+//                     resolve("promise1 solved")
+//                 },10000)
+//             }
+//             else{
+//                 setTimeout(()=>{
+//                     resolve("promise2 solved")
+//                 },5000)
+//             }
+//         })
+//         return promise
 //     }
-// }
+    
+//     async function getData() {
+//         console.log("inside getData function console")
+//         let data1 = await returnPromise(true)  //phle ye 10 sec lega resolve hone me 
+//         console.log(data1)
+//         console.log("promise1 console")
+    
+//         let data2 = await returnPromise(false)  //fir ye alg se 5 sec lega resolve hone me
+//         console.log(data2)
+//         console.log("promise2 console")
+//     }
+    
+//     getData()
+    
+//     console.log("after getData return")
+    
+//     setTimeout(()=>{
+//         console.log("ye print kb ho rha h???")
+//         console.log("kya ye getData pura run hoga fir print hoga??")
+//     },2000)
+//         let data2 = await returnPromise(false)  //fir ye alg se 5 sec lega resolve hone me
+//         console.log(data2)
+//         console.log("promise2 console")
+//     }
+    
+//     getData()
+    
+//     console.log("after getData return")
+    
+//     setTimeout(()=>{
+//         console.log("ye print kb ho rha h???")
+//         console.log("kya ye getData pura run hoga fir print hoga??")
+//     },2000)
 
-// let myFunObj =  myConstructor("promil", "CIS")
-// console.log(myFunObj)  //return object
-// console.log(myFunObj.name) //return promil
-// console.log(myFunObj.company) //return CIS
+    // output is 
+    // inside getData function console
+    // after getData return
+    // ye print kb ho rha h???
+    // kya ye getData pura run hoga fir print hoga??
+    // promise1 solved
+    // promise1 console
+    // promise2 solved
+    // promise2 console
+
+    // let extraAug = {
+    //     location : "Indore",
+    //     value : 100
+    // }
+
+   
+
+
+//  fetch browser api :
+    // using async/await
+    // const API_URL = "https://dummyjson.com/products/1"
+
+    // async function fetchDataAPI() {
+    //     let responseObj = await fetch(API_URL)
+    //     let resultData = await responseObj.json()
+    //     console.log(resultData.brand)
+    // }
+    // fetchDataAPI()
+
+    // using .then()
+    // const API_URL = "https://dummyjson.com/products/1"
+
+    // function fetchDataAPI() {
+    //     fetch(API_URL).then((responseObj)=> responseObj.json()).then((resultData)=> console.log(resultData.brand))
+    // }
+    // fetchDataAPI()
 
 
 
-// let add = (x,y) => x+y;
-// console.log(typeof add)  //function
+    // error handling in async/await  
+    // .then() me .catch() error ko handle krta tha but in async / await try{} and catch{} block handle the errors
+
+    // const API_URL = "https://dummysjson.com/products/1"
+
+    // async function fetchDataAPI() {
+    //     try{
+    //         let responseObj = await fetch(API_URL)
+    //         let resultData = await responseObj.json()
+    //         console.log(resultData.brand)
+    //     }catch(err) {
+    //         console.log(err)
+    //     }
+    // }
+    // fetchDataAPI()
+
+
+    
+
+
+    // task given by vijendra sir to, make custom map function in javascript
+    
+     // Array.prototype.myMap = function(func, thisParam) {
+    //     let resultArray = [];
+        // for(let i=0; i<this.length; i++)
+        // {
+        //     resultArray.push(func(this[i], i, thisParam.location))
+        // }
+        // return resultArray
+
+        // while
+        // let i = 0;
+        // while(i<this.length) {
+        //     resultArray.push(func(this[i], i, thisParam.location))
+        //     i++
+        // }
+        // return resultArray
+
+        // do-while
+        // let i = 0;
+        // do{
+        //     resultArray.push(func(this[i], i, thisParam.location))
+        //     i++
+        // }while(i<this.length);
+        // return resultArray
+
+        // for-in
+        // for(let i in this)
+        // {
+        //     resultArray.push(func(this[i], i, thisParam.location))
+        // }
+        // return resultArray
+
+        // for-of
+        // for(let i of this)
+        // {
+        //     resultArray.push(func(i, this.indexOf(i), thisParam.location))
+        // }
+        // return resultArray
+
+        // for-Each
+        // this.forEach((val)=>{
+        //     resultArray.push(func(val, this.indexOf(val), thisParam.location))
+        // })
+        // return resultArray
+
+    // }
+
+
+    // Arrow function
+    // Array.prototype.myMap = (func, thisParam) => {
+    //     // console.log(this)
+    //     let resultArray = [];
+    //     for(let i=0; i<thisParam.length; i++)
+    //     {
+    //         resultArray.push(func(thisParam[i], i))
+    //     }
+    //     return resultArray
+    // }
+    
+    // let arr = [1,2,3,4]
+    // let objArr = [
+    //     {myName : "promil", myCompany : "CIS"},
+    //     {myName : "subh", myCompany : "TCS"},
+    //     {myName : "raj", myCompany : "Qodeleaf"},
+    // ]
+
+    // let returnObjArray =objArr.myMap((val, index, extraStaff)=>{
+    //     return val.myName + " " + val.myCompany + " " + index + " " + extraStaff
+    // },objArr)
+    // console.log(returnObjArray)
+
+    
+    // array//
+    // let returnArr = arr.myMap((val,index, extraStaff)=>{
+    //     // console.log(this) 
+    //     return val*20*index + " " + extraStaff
+    // },extraAug)
+    // console.log(returnArr)
+    
+    // array object//
+    // let returnObjArray =objArr.myMap((val, index, extraStaff)=>{
+    //     return val.myName + " " + val.myCompany + " " + index + " " + extraStaff
+    // },extraAug)
+    // console.log(returnObjArray)
+
+    // if(arr.length <= 0) return resultArray
+    //     resultArray.push(func(arr[(arr.length)-1],(arr.length)-1))
+    //     arr.pop()
+    //     abc(func, arr)
+    //     return resultArray
+
+
+    // Recursion
+    // let resultArray = [];
+    // let i = 0;
+    // Array.prototype.myMap = function abc(func, arr) {
+    //     // console.log(arr.length)
+    //     if(i >= arr.length) return resultArray
+    //     resultArray.push(func(arr[i],i))
+    //     i++
+    //     abc(func, arr)
+    //     return resultArray
+    // }
+
+    // let array = [1,2,3,4]
+    // let objArr = [
+    //     {myName : "promil", myCompany : "CIS"},
+    //     {myName : "subh", myCompany : "TCS"},
+    //     {myName : "raj", myCompany : "Qodeleaf"},
+    // ]
+
+    // array//
+    // let returnArr = array.myMap((val,index)=>{
+    //     // console.log(this) 
+    //     return val*20*index 
+    // },array)
+    // console.log(returnArr)
+    
+    // array object//
+    // let returnObjArray = objArr.myMap((val, index)=>{
+    //     return val.myName + " " + val.myCompany + " " + index 
+    // },objArr)
+    // console.log(returnObjArray)
+
  
-
-// let square = x => x*x;
-// console.log(square(5))
-
-
-// POINT BE NOTED:
-// let myConstructor = (name) => {
-//     return {
-//         name : name
-//     }
-// }
-
-// console.log(myConstructor("promil").name)
-
-// function Car() {
-//     this.speed = 0;
-
-//     this.speedUp = function (speed) {
-//         console.log(this === car)
-//         this.speed = speed;
-//         setTimeout(function () {
-//             console.log(this === window) //true
-//             console.log(this.speed); // undefined because inside settimeout vala function vo na apna ek agl hi execution conext  bna lega jo ki this refer krega window ko aur 
-//             // window me speed search krega usko vha ni milega to undefined return krega
-//         }, 1000);
-
-//     };
-// }
-
-// let car = new Car();
-// car.speedUp(50);
-
-// solution --->I
-// function Car() {
-//     this.speed = 0;
-
-//     this.speedUp = function (speed) {
-//         console.log(this === car)
-//         let speedValue = speed  //closure help in 
-//         setTimeout(function () {
-//             console.log(speedValue); // 50
-//         }, 1000);
-
-//     };
-// }
-
-// let car = new Car();
-// car.speedUp(50);
-// let speedValue = speed
-
-// solution- II using arrow function
-// function Car() {
-//     this.speed = 0;
-
-//     this.speedUp = function (speed) {
-//         console.log(this === car)
-//         this.speed = speed;
-//         setTimeout(() => {
-//             console.log(this === window) //false
-//             console.log(this === car) //true
-//             console.log(this.speed); // 50 because inside settimeout vala arrow function vo na new execution conext  nhi bnayega jo ki this refer krega car k object
-//             // ko hi krga and will print 50
-//         }, 1000);
-
-//     };
-// }
-
-// let car = new Car();
-// car.speedUp(50);
-
-
-// JavaScript arrow functions and the prototype property/////// IMPORTANT
-
-// function myFun() {
-//     console.log("normal function....")
-// } 
-
-// myFun() //normal function....
-
-// // but what if --->
-// console.log(myFun.hasOwnProperty('prototype')) //return true because When you define a function using a function keyword, the function has a property called prototype:
-
-
-// let arrowFun = () => {
-//     console.log("arrow function ....")
-// }
-
-// arrowFun()//arrow function ....
-
-// // but what if --->
-// console.log(arrowFun.hasOwnProperty('prototype')) //return false when we define a function using arrow function then arrow functions don’t have the prototype property:
-
-
-//just for show in the console a setTimeOut (async) naam ka container call stack me push ho jayega
-// setTimeout(function() {
-//     console.log("timer")
-//     let x = 5;
-//     function inner() {
-//         console.log(x)
-//     }
-//     inner()
-// }, 4000)
-
-// function x(y) {
-//     console.log("x is called")
-//     y()
-// }
-
-// x(function y() {
-//     console.log("y is called")
-// })
-
-
-// callback
-// function attachEvent() {
-//     let count = 0
-//     document.getElementById("btn").addEventListener('click', function counterFun() {
-//         console.log("button clicked", count++)
-//     });
-// } 
-// console.log("heyy")
-// attachEvent()
-
-
-// TASK to find the odd number in array numbers
-
-// function isOdd(num) {
-//     return num%2 != 0
-// }
-// function filter(numArray, oddFun) {
-//     let resultArray = []
-//     for(let number of numArray) {
-//         if(oddFun(number))resultArray.push(number)
-//     }
-//     return resultArray
-// }
-
-// let numbers = [1,2,4,7,3,5,6]
-
-// let oddNumber =  filter(numbers, isOdd);
-// console.log(oddNumber)
-
-
-// asynchronous callback
-
-// function download(url) {
-//     setTimeout(()=>{
-//         console.log("downloading completed..", url)
-//     },1000)
-// }
-
-// function process(url){
-//     console.log("processing done...", url)
-// }
-
-// let url = 'https://wwww.javascripttutorial.net/pic.jpg';
-
-// download(url)
-// process(url)
-// output:
-// processing done... https://wwww.javascripttutorial.net/pic.jpg
-// javascript.js:306 downloading completed.. https://wwww.javascripttutorial.net/pic.jpg
-// wrong execution what we want first download the image and then processing
-//  the image but what is happening first process the image and then download
-
-// solution===>using callback
-
-// function download(url, callBackFun) {
-//     setTimeout(()=>{
-//         console.log("downloading completed..", url)
-//         callBackFun(url)
-//     },1000)
-// }
-
-// function process(url){
-//     console.log("processing done...", url)
-// }
-
-// let url = 'https://wwww.javascripttutorial.net/pic.jpg';
-// download(url, process)
-// output:
-// downloading completed.. https://wwww.javascripttutorial.net/pic.jpg
-// javascript.js:334 processing done... https://wwww.javascripttutorial.net/pic.jpg
-
-
-// higher order function
-// let radiusArray = [3,2,5,4];
-
-// function calculateArea(radius) {
-//     return Math.PI * radius * radius
-// }
-
-// function calculateCircumference(radius) {
-//     return 2 * Math.PI * radius
-// }
-
-// function calculateDiameter(radius) {
-//     return 2 * radius
-// }
-
-// function calculate(radiusArray, callbackFun) {
-//     let resultArray = []
-//     for(let val of radiusArray){
-//         resultArray.push(callbackFun(val))
-//     }
-//     return resultArray
-// }
-
-// console.log(calculate(radiusArray, calculateArea))
-// console.log(calculate(radiusArray, calculateCircumference))
-// console.log(calculate(radiusArray, calculateDiameter))
-
-
-// TASK for map and filter
-// we have to apply map on object Array
-// const users = [
-//     {firstName : 'promil' , lastName : 'jain', age : 23},
-//     {firstName : 'subhi' , lastName : 'jain', age : 24},
-//     {firstName : 'papa' , lastName : 'don', age : 49},
-// ]
-// const outputs = users.map((obj)=>{
-//     // let first, last;
-//     // for(let val in obj){
-//     //     if(val == 'firstName')first = obj[val]
-//     //     if(val == 'lastName')last = obj[val]
-//     // }
-//     // return first + " " + last
-//     //mintos ki goli khaoooooo hahahaha....
-//     return obj.firstName + "  " + obj.lastName
-// }) 
-
-// console.log(outputs)
-
-
-// find the number of people have a same age make then an Object
-// const users = [
-//         {firstName : 'promil' , lastName : 'jain', age : 23},
-//         {firstName : 'subhi' , lastName : 'jain', age : 24},
-//         {firstName : 'papa' , lastName : 'don', age : 49},
-//         {firstName : 'raj' , lastName : 'sharma', age : 23},
-//         {firstName : 'chotu' , lastName : 'eee', age : 23},
-//         {firstName : 'golu' , lastName : 'ppp', age : 49},
-//         {firstName : 'molu' , lastName : 'kkk', age : 24},
-//     ]
-
-//     const userObject = users.reduce(function(acc, curr){  //here curr me ek ek object aayega
-//         if(acc[curr.age]){
-//             acc[curr.age] = ++acc[curr.age];
-//         }else{
-//             acc[curr.age] = 1
-//         }
-//         return acc
-//     },{})
-
-//     console.log(userObject)
-
-//     //sum of all num in array
-//     let arrayNum = [1,2,3,4,5]
-
-//     let result = arrayNum.reduce(function(acc, curr) {
-//         acc = acc + curr
-//         return acc
-//     },0)
-//     console.log(result)
