@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0e0e0e;
+}
+
+.outerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 730px;
+  background-color: hsl(0deg 0% 10%);
+}
+
+.shadowContainer {
+  height: 663px;
+  width: 500px;
+  border-radius: 30px;
+  box-shadow: 0px 10px 20px #111111;
+}
+
+.container {
+  height: 663px;
+  width: 500px;
+  padding: 30px;
+  border-radius: 30px;
+  background-color: hsl(0deg 0% 10%);
+  box-shadow: inset 0px 20px 50px -10px #171717;
+}
+
+.innerBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #303030, #474747);
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 1);
+    border-radius: 11px;
+    margin-left: 5px;
+    margin-top: -11px;
+    border: none;
+    background-clip: padding-box;
+    border-left: 1px solid rgba(27, 27, 27, 0.1);
+  }
+
+  .adj {
+    width: 70px;
+    height: 51px;
+    margin-top: 3px;
+    margin-left: 3px;
+  }
+
+  .adj2 {
+    width: 67px;
+    margin-top: 3px;
+    height: 54px;
+  }
+
+  #plusBtn {
+    width: 66px;
+    height: 150px;
+    margin-left: 4px;
+    margin-top: 2px;
+    background-clip: padding-box;
+  }
+
+  #equalBtn {
+    background: linear-gradient(90deg, #197dcc, #6bb7f3);
+    width: 67px;
+    margin-top: 2px;
+    height: 55px;
+    margin-left: 2px;
+    background-clip: padding-box;
+  }
+
+  #cBtn {
+    margin-left: 3px;
+    height: 54px;
+    width: 176px;
+    background: linear-gradient(70deg, #d50904, #fd5858);
+    font-size: 24px;
+    margin-top: 3px;
+    background-clip: padding-box;
+    border-left: 1px solid rgb(124, 123, 123);
+  }
+
+  td {
+    text-align: center;
+    font-size: 24px;
+    color: #ffffff;
+    border: 2.9px solid black;
+    border-radius: 13px;
+    cursor: pointer;
+    background: #323232;
+    box-shadow: 10px 10px 5px 1px #171717;
+  }
+
+  table {
+    width: 100%;
+    border: none;
+    border-spacing: 17px;
+    margin-top: -20px;
+  }
+
+  input#displayText{
+    font-size: 46px;
+    color: #2b2d30;
+    border: 1px solid black;
+  }
+
+
+  input {
+    width: 407px;
+    height: 105px;
+    margin-bottom: 20px;
+    border-radius: 13px;
+    border: 1px solid black;
+    background: #a7af7c;
+    color: #c8cbcd;
+    text-align: right;
+    font-size: 24px;
+    padding: 10px;
+    margin-top: 2px;
+    margin-left: 17px;
+    border: 2px solid black;
+  }
+
+ 

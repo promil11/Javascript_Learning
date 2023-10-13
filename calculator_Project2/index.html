@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0e0e0e;
+}
+
+.outerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 730px;
+  background-color: hsl(0deg 0% 10%);
+}
+
+.shadowContainer {
+  height: 663px;
+  width: 500px;
+  border-radius: 30px;
+  box-shadow: 0px 10px 20px #111111;
+}
+
+.container {
+  height: 663px;
+  width: 500px;
+  padding: 30px;
+  border-radius: 30px;
+  background-color: hsl(0deg 0% 10%);
+  box-shadow: inset 0px 20px 50px -10px #171717;
+}
+
+.innerBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #303030, #474747);
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 1);
+    border-radius: 11px;
+    margin-left: 5px;
+    margin-top: -11px;
+    border: none;
+    background-clip: padding-box;
+    border-left: 1px solid rgba(27, 27, 27, 0.1);
+  }
+
+  .adj {
+    width: 70px;
+    height: 51px;
+    margin-top: 3px;
+    margin-left: 3px;
+  }
+
+  .adj2 {
+    width: 67px;
+    margin-top: 3px;
+    height: 54px;
+  }
+
+  #plusBtn {
+    width: 66px;
+    height: 150px;
+    margin-left: 4px;
+    margin-top: 2px;
+    background-clip: padding-box;
+  }
+
+  #equalBtn {
+    background: linear-gradient(90deg, #197dcc, #6bb7f3);
+    width: 67px;
+    margin-top: 2px;
+    height: 55px;
+    margin-left: 2px;
+    background-clip: padding-box;
+  }
+
+  #cBtn {
+    margin-left: 3px;
+    height: 54px;
+    width: 176px;
+    background: linear-gradient(70deg, #d50904, #fd5858);
+    font-size: 24px;
+    margin-top: 3px;
+    background-clip: padding-box;
+    border-left: 1px solid rgb(124, 123, 123);
+  }
+
+  td {
+    text-align: center;
+    font-size: 24px;
+    color: #ffffff;
+    border: 2.9px solid black;
+    border-radius: 13px;
+    cursor: pointer;
+    background: #323232;
+    box-shadow: 10px 10px 5px 1px #171717;
+  }
+
+  table {
+    width: 100%;
+    border: none;
+    border-spacing: 17px;
+    margin-top: -20px;
+  }
+
+  input#displayText{
+    font-size: 46px;
+    color: #2b2d30;
+    border: 1px solid black;
+  }
+
+
+  input {
+    width: 407px;
+    height: 105px;
+    margin-bottom: 20px;
+    border-radius: 13px;
+    border: 1px solid black;
+    background: #a7af7c;
+    color: #c8cbcd;
+    text-align: right;
+    font-size: 24px;
+    padding: 10px;
+    margin-top: 2px;
+    margin-left: 17px;
+    border: 2px solid black;
+  }
+
+ 
+    </style>
+    
+</head>
+<body>
+    <div class="outerContainer">
+        <div class="shadowContainer">
+            <div class="container">
+                <form onsubmit="event.preventDefault(); ">
+                    <div class="screen">
+                        <input type="text" name="display" id="displayText" value=" " disabled="disabled" placeholder="0">
+                    </div>
+                    <div class="table">
+                        <table border="1px" id="inputBox">
+                            <tbody id="allBtn">
+                                <tr>
+                                    <td colspan="2" style="background: #bf0700">
+                                        <input type="button" name="c" id="cBtn" value="C" class="innerBtn" onclick=" display.value = '';">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="/" id="divBtn" value="/" class="innerBtn adj2" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="*" id="mulBtn" value="*" class="innerBtn adj2" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <td>
+                                        <input type="button" name="7" id="sevenBtn" value="7" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="8" id="eightBtn" value="8" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="9" id="nineBtn" value="9" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="-" id="minusBtn" value="-" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <td>
+                                        <input type="button" name="4" id="fourBtn" value="4" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="5" id="fiveBtn" value="5" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="6" id="sixBtn" value="6" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td rowspan="2">
+                                        <input type="button" name="+" id="plusBtn" value="+" class="innerBtn" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <td>
+                                        <input type="button" name="1" id="oneBtn" value="1" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="2" id="twoBtn" value="2" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="3" id="threeBtn" value="3" class="innerBtn adj2" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <td>
+                                        <input type="button" name="0" id="zeroBtn" value="0" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="00" id="dblBtn" value="00" class="innerBtn adj" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td>
+                                        <input type="button" name="." id="dotBtn" value="." class="innerBtn adj2" onclick="
+                                            (display.value == 'Syntax Error' || display.value == 'undefined') ? display.value = '' : display.value += this.value">
+                                    </td>
+                                    <td style="background: #1870b3">
+                                        <input type="submit" name="=" id="equalBtn" value="=" class="innerBtn" onclick="(()=>{
+                                            try{
+                                                display.value = eval(display.value)
+                                            }catch(error){
+                                                display.value = 'Syntax Error'
+                                            }
+                                        })()">
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
