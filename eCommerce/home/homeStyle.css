@@ -1,0 +1,188 @@
+/* '///////////////////////////////////'home page// */
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    color: white;
+}
+
+/* body {
+    background-image: url('homeImg.avif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+} */
+body{
+    background: #030303;
+    height: 100vh;
+    width: 100vw;
+   
+}
+
+#btn {
+    position: absolute;
+    top: 15px;
+    left: 45px;
+    height: 45px;
+    text-align: center;
+    width: 45px;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: left 0.5s ease;
+}
+
+#btn.click {
+    left: 260px;
+} 
+
+#btn span {
+    margin-top: 8px;
+    font-size: 28px;
+    line-height: 28px;
+    color: rgb(8, 129, 123);
+}
+
+#btn.click span::before {
+    content: '\f00d';
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    background: #1b1b1b;
+    /* left: 0; */
+    left: -250px;
+    transition: left 0.5s ease;
+}
+
+.sidebar.show {
+    left: 0px;
+}
+
+.sidebar .text {
+    color: white;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 65px;
+    text-align: center;
+    background: #1e1e1e;
+    letter-spacing: 1px;
+}
+
+nav ul {
+    background: #1b1b1b;
+    height: 100%;
+    width: 100%;
+    list-style: none;
+}
+
+nav ul li {
+    line-height: 60px;
+    /* border: 1px solid white; */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav ul li:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding-left: 40px;
+    position: relative;
+    /* border: 2px solid red; */
+    font-weight: 500;
+    display: block;
+    width: 100%;
+    border-left: 3px solid transparent;
+}
+
+nav ul li a:hover {
+    color: cyan;
+    background: #1e1e1e;
+    border-left-color: cyan;
+}
+
+nav ul ul {
+    display: none;
+    position: static;
+}
+
+nav ul #product-show.show , nav ul #categories-show.show {
+    display: block;
+}
+
+nav ul ul li {
+    border-bottom: none;
+}
+
+nav ul ul li a {
+    font-family: 16px;
+    color: #e6e6e6;
+    padding-left: 80px;
+}
+
+nav ul li a span {
+    position: absolute; 
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 22px;
+    top: 50%;
+    /* border: 2px solid white; */
+    transition: transform 0.5s;
+}
+
+nav ul li a:hover span {
+    transform: translateY(-50%) rotate(-180deg);
+}
+
+nav ul li a:hover span i {
+    color: cyan;
+}
+
+#loginBtn.hide {
+    display: none;
+}
+
+.main-container {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20%;
+}
+
+.div-left {
+    border: 2px solid rgb(250, 235, 235);
+    width: 70%;
+    height: 50%;
+    box-shadow: 5px 5px 5px 1px #20584f;
+}
+
+.div-right {
+    text-align: center;
+}
+
+.div-right h1,h3 {
+    text-shadow: 2px 2px;
+    color: cyan;
+    letter-spacing: 3px;
+}
+
+.main-container .div-left img {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+}
+

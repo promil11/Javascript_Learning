@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="homeStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="btn">
+        <span class="fa fa-bars"></span>
+    </div>
+    <nav class="sidebar">
+        <div class="text">SIDE MENU</div>
+        <ul id="ulList">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#" id="prod-btn">Products
+                <span><i class="fa fa-caret-down"></i></span>
+            </a>
+                <ul id="product-show" class="showProd">
+                    <li><a href="../viewPoduct/viewProduct.html">View Products</a></li>
+                    <li><a href="../editProduct/editProduct.html">Edit Product</a></li>
+                </ul>
+            </li>
+            <li><a href="#" id="categ-btn">Categories
+                <span><i class="fa fa-caret-down"></i></span>
+            </a>
+                <ul id="categories-show" class="showProd">
+                    <li><a href="#">Electronics</a></li>
+                    <li><a href="#">Toys</a></li>
+                    <li><a href="#">Pet Products</a></li>
+                    <li><a href="#">Fashions</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="../login/login.html" id="loginBtn">Login</a></li>
+            <li id="logout"></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="div-left">
+           <img src="homeImg.avif" alt="">
+        </div>
+        <div class="div-right">
+            <h1>E-COMMERCE HOME PAGE</h1>
+            <h3>All Product Available</h3>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("prod-btn").addEventListener('click', function(){
+            document.querySelector("ul li #product-show").classList.toggle("show")
+        })
+
+        document.getElementById("categ-btn").addEventListener('click', function(){
+            document.querySelector("ul li #categories-show").classList.toggle("show")
+        })
+
+        document.getElementById('btn').addEventListener('click', function() {
+            this.classList.toggle("click")
+            //  console.log(list)
+            document.querySelector("nav.sidebar").classList.toggle("show")
+        });
+
+        (localStorage.getItem("user") === 'true') 
+        ? document.getElementById('loginBtn').classList.add("hide") : document.getElementById('loginBtn').classList.remove("hide");
+
+        if(localStorage.getItem("user") === 'true') {
+            let ul = document.getElementById("ulList")
+            let lastElement = ul.children[ul.children.length - 1]
+            document.getElementById("logout").innerHTML = "<a href='../login/login.html' id='loginBtn'>Logout</a>"
+        }
+
+        document.getElementById("logout").addEventListener('click', function(){
+            localStorage.removeItem("user")
+        })
+         
+
+    </script>
+</body>
+</html>

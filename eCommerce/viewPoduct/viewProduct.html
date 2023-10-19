@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Filter Product</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" type="text/css" href="viewProduct.css">
+</head>
+<body>
+
+	<main>
+		<header>
+			<ul class="indicator">
+				<li id="All" class="active"><a href="#">All</a></li>
+				<li id="Blazzers" ><a href="#">Blazzers</a></li>
+				<li id="Watches" ><a href="#">Watches</a></li>
+				<li id="Shoes" ><a href="#">Shoes</a></li>
+				<li id="Mobiles" ><a href="#">Mobiles</a></li>
+			</ul>
+			<div class="filter-condition">
+				<span>View As a</span>
+				<select name="" id="select">
+					<option value="Default">Default</option>
+					<option value="LowToHigh">Low to High</option>
+					<option value="HighToLow">High to Low</option>
+				</select>
+			</div>
+		</header>
+		<div class="product-field">
+			<ul class="items" id="productItems">
+	
+			</ul>
+		</div>
+	</main>
+
+	<script>
+		let productItems = document.getElementById("productItems")
+		let productData = localStorage.getItem("productData")
+		let parseProductData = JSON.parse(productData)
+		
+		if(parseProductData) {
+		parseProductData.forEach((rowData, index) => {
+			productItems.innerHTML += `
+			<li data-price="" product_name="${rowData.productName}">
+				<picture>
+					<img src=${rowData.profile} alt="">
+				</picture>
+				<div class="detail">
+					<p class="icon">
+						<span><i class="far fa-heart"></i></span>
+						<span><i class="far fa-share-square"></i></span>
+						<span><i class="fas fa-shopping-basket"></i></span>
+					</p>
+					<strong>${rowData.productName}</strong>
+					<span>${rowData.productContain}</span>
+					<small>Buy now</small>
+				</div>
+				<h4>${rowData.productPrice}</h4>
+			</li>`
+		})
+	}
+		
+
+		//filter
+		let productUl = document.querySelector(".items")
+		let allProductLi = Array.from(productUl.children)
+		// console.log(allProductLi)
+		let select = document.getElementById("select")
+		let list = []
+
+		for(let item of allProductLi){
+			// console.log(item.lastElementChild)
+			let h4Data = item.lastElementChild
+			let x = h4Data.textContent.trim()
+			// console.log(x)
+			let valueRs = Number(x.substring(1))
+			// console.log(valueRs)
+			item.setAttribute("data-price",valueRs)
+			list.push(item)
+		}
+		
+		select.onchange = function() {
+			if(this.value === 'Default'){
+				while(productUl.firstChild){
+					productUl.removeChild(productUl.firstChild)
+				}
+				productUl.append(...list)
+			}
+			if(this.value === 'LowToHigh'){
+				sortElement(productUl, allProductLi, true)
+			}
+			if(this.value === 'HighToLow'){
+				sortElement(productUl, allProductLi, false)
+			}
+		}
+
+		function sortElement(productUl, allProductLi, boo) {
+			let asc = boo ? 1 : -1
+			let sortedLi = allProductLi.sort((a,b)=>{
+				let ax = a.getAttribute('data-price')
+				let bx = b.getAttribute("data-price")
+
+				return ax > bx ? 1*asc : -1*asc
+			})
+			while(productUl.firstChild){
+				productUl.removeChild(productUl.firstChild)
+			}
+			productUl.append(...sortedLi)
+		}
+
+		//search
+		document.getElementById('All').onclick = function() {
+			for(let li of allProductLi){
+				li.style.display = ""
+			}
+		}
+		document.getElementById('Blazzers').onclick = function() {
+			// console.log(allProductLi[0])
+			for(let li of allProductLi){
+				console.log(li)
+				console.log(li.getAttribute("product_name"))
+				if(li.getAttribute("product_name") === 'Blazzer'){
+					li.style.display = ""
+				}else{
+					li.style.display = "none"
+				}
+			}
+		}
+
+		document.getElementById('Mobiles').onclick = function() {
+			// console.log(allProductLi[0])
+			for(let li of allProductLi){
+				console.log(li)
+				console.log(li.getAttribute("product_name"))
+				if(li.getAttribute("product_name") === 'Mobile'){
+					li.style.display = ""
+				}else{
+					li.style.display = "none"
+				}
+			}
+		}
+
+		document.getElementById('Watches').onclick = function() {
+			// console.log(allProductLi[0])
+			for(let li of allProductLi){
+				console.log(li)
+				console.log(li.getAttribute("product_name"))
+				if(li.getAttribute("product_name") === 'Watch'){
+					li.style.display = ""
+				}else{
+					li.style.display = "none"
+				}
+			}
+		}
+
+		document.getElementById('Shoes').onclick = function() {
+			// console.log(allProductLi[0])
+			for(let li of allProductLi){
+				console.log(li)
+				console.log(li.getAttribute("product_name"))
+				if(li.getAttribute("product_name") === 'Shoe'){
+					li.style.display = ""
+				}else{
+					li.style.display = "none"
+				}
+			}
+		}
+
+	</script>
+	
+</body>
+</html>
