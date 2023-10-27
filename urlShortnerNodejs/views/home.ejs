@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendering HTML EJS</title>
+</head>
+<body>
+    <h1>GENERATE SHORTERN URL FOR ORIGINAL URL</h1>
+    <% if (locals.UrlId) { %>
+        <h1>URL GENERATED : http://localhost:5000/url/<%= UrlId %></h1>
+    <% } %>
+    
+    <form method="POST" action="/url" onsubmit="event.preventDefault()">
+        <label for="URL">Enter Your Original Url:</label>
+        <input type="text" name="url" id="URL" placeholder="Enter Original Url">
+        <button type="submit">GENERATE SHORTURL</button>
+    </form>
+</body>
+</html>

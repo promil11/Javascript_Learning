@@ -21,11 +21,6 @@ async function userRegister(req, res) {
     }
 }
 
-
-
-// let SECRET = "PROMIL_JAIN_SECRET_KEY"
-// let SECRETREFRESHKEY = "PROMIL_JAIN_SECRET_REFRESH_KEY"
-
 function generateJwtToken(req, res) {
     let bodyData = req.body
     let user = {
@@ -49,10 +44,13 @@ function generateRefreshToken(req, res) {
 async function userLogin(req, res) {
     let bodyData = req.body
     let data = await User.findOne({email: bodyData.email})
-    if(data == null) res.status(404).send("user are not exist/registered")
-    if(data.accessible == false) res.status(401).send("user are not able to login more than 3 times")
+    if(data.email && !data.password) return res.status(404).send("credentials are incomplete")
+    if(data == null) return res.status(404).send("user are not exist/registered")
+    if(data.accessible == false) return res.status(401).send("user are not able to login more than 3 times")
     if(await bcrypt.compare(bodyData.password, data.password)){
         // console.log("password matched")
+        data.limit = 0
+        data.save()
         let refreshToken =  generateRefreshToken(req, res)
         let jwtAccessToken = generateJwtToken(req, res)
         // console.log(refreshToken)
@@ -61,7 +59,7 @@ async function userLogin(req, res) {
         .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
         .header('Authorization', jwtAccessToken)
         .status(200).
-        json({"message":"user loggedIn successfully", "jwt-token": jwtAccessToken, "refresh-token": refreshToken})
+        json({"status":1,"message":"user loggedIn successfully", "jwt-token": jwtAccessToken, "refresh-token": refreshToken})
     }
     else{
         // console.log("password not matched")
@@ -79,7 +77,7 @@ async function userLogin(req, res) {
 async function adminGiveAccess(req, res) {
     let bodyData = req.body
     let userExist = await User.findOne({email: bodyData.email})
-    if(userExist == null)res.status(404).send("user are not registered")
+    if(userExist == null)return res.status(404).send("user are not registered")
     userExist.accessible = true
     userExist.limit = 0
     userExist.save()
@@ -88,21 +86,27 @@ async function adminGiveAccess(req, res) {
 
 
 async function userForgotPassword(req, res) {
-    let bodyData = req.body
-    let userExist = await User.findOne({email: bodyData.email})
-    if(userExist == null)res.status(404).send("user are not registered")
-    
-    let hashedPassword = await bcrypt.hash(bodyData.password, 10)
-    userExist.password = hashedPassword
-    userExist.save()
-    res.status(200).send("password updated successfully")
+//     let bodyData = req.body
+//     let userExist = await User.findOne({email: bodyData.email})
+//     if(userExist == null)return res.status(404).send("user are not registered")
+//     let hashedPassword = bcrypt.hash(bodyData.password, 10)
+//     userExist.password = hashedPassword
+//     userExist.save()
+//     let user = {
+//         email: userExist.email,
+//         password: userExist.password
+//     }
+//     let jwtAccessToken = jwt.sign(user, process.env.SECRET, { expiresIn: 300000 })
+//     console.log(jwtAccessToken)
+//     req.headers.jwttoken = jwtAccessToken
+//     res.status(200).send("password updated successfully")
 }
 
 
 async function userChangePassword(req, res) {
     let bodyData = req.body
     let userExist = await User.findOne({email: bodyData.email})
-    if(userExist == null)res.status(404).send("user are not registered")
+    if(userExist == null)return res.status(404).send("user are not registered")
     
     let hashedPassword = await bcrypt.hash(bodyData.password, 10)
     userExist.password = hashedPassword
