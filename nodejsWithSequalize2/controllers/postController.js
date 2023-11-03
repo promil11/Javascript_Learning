@@ -7,7 +7,7 @@ function insertData(req, res) {
         content:req.body.content,
         imageUrl:req.body.imageUrl,
         categoryId:req.body.categoryId,
-        userId:2
+        userId:7
     }
     // A string field has a limit of 255 characters, whereas a text field has a character
     //  limit of 30,000 characters.

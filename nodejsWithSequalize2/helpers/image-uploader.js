@@ -10,21 +10,22 @@ const storage = multer.diskStorage({
     }
 })
 
-// const fileFilter = (req, file, cb)=>{
-    // if(file.mimeType == 'image/jpeg' || file.mimeType == 'image/png'){
-    //     cb(null, true)
-    // }else{
-    //     cb(new Error("unsupported file"), false)
-    // }
-    // console.log(file.mimeType) //undefined why??
-// }
+const fileFilter = (req, file, cb)=>{
+    console.log("file", file, cb, req)
+    if(file.mimetype == 'image/jpeg' || file.mimetype == 'image/png'){
+        cb(null, true)
+    }else{
+        cb(new Error("unsupported file"), false)
+    }
+    console.log(file.mimetype) 
+}
 
 const upload = multer({
     storage: storage,
     limits: {
         fileSize: 1024*1024*10
     },
-    // fileFilter: fileFilter
+    fileFilter: fileFilter
 })
 
 module.exports = {
