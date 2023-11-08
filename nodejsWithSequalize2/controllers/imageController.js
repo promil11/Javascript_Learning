@@ -3,7 +3,8 @@ const models = require("../models")
 function uploadImage(req, res) {
     if(req.file.filename){
         let imageData = {
-            image: req.file.filename
+            user_id: req.body.user_id,
+            user_image: req.file.filename
         }
         models.Imageuplaod.create(imageData).then((result)=>{
             if(result){

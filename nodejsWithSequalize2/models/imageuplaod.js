@@ -11,10 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Imageuplaod.belongsTo(models.User, {
+        foreignKey: "user_id",
+        targetKey: "id"
+      })
     }
   }
   Imageuplaod.init({
-    image: DataTypes.STRING
+    user_image: DataTypes.STRING,
+    user_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Imageuplaod',

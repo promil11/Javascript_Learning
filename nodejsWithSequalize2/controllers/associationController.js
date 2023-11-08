@@ -1,58 +1,80 @@
 const models = require("../models")
 
-async function test(req, res) {
-    // one-to-one
-    // const user = await models.User.findByPk(7, {
-    //     include: [models.Post]
-    // })
+async function testOneToMany(req, res) {
+    const fetchId = req.query.id
+    // user has one to many relation with post
+    const userData = await models.User.findAll({
+        where: {
+            id: fetchId
+        },
+        include: [models.Post]
+    },  
+    )
+    res.status(200).json({
+        data: userData
+    })
 
-    // const post = await models.Post.findByPk(4, {
+    // post has one to one relation with user
+    // const postData = await models.Post.findOne({
+    //     where: {
+    //         id: fetchId,
+    //     },
     //     include: [models.User]
-    // }) 
-
-    // one-to-many
-    // const user = await models.User.findByPk(7,{
-    //     include: [models.Post]
     // })
-
-
-    // many-to-many
-    // const post = await models.Post.findByPk(4, {
-    //     include: [models.Category]
-    // })
-
-    // const category = await models.Category.findByPk(3, {
-    //     include: [models.Post]
-    // })
-    
     // res.status(200).json({
-    //     data: category
+        // data: postData.User.name 
+        // data: postData
     // })
+}
 
-
-    // lazy loading...
-    // let data = await models.User.findByPk(7)
-    // let postData = await data.getPosts()
-    // console.log(postData)
+async function testOneToOne(req, res) {
+    const fetchId = req.query.id
+    // user has one relation with image table
+    // const userImageData = await models.User.findOne({
+    //     where: {
+    //         id: fetchId
+    //     },
+    //     include: [models.Imageuplaod]
+    // })
     // res.status(200).json({
-    //     user: data,
-    //     post: postData
+    //     // data: post.User.name 
+    //     data: userImageData
     // })
 
-    //eager loading...
-    let data = await models.User.findByPk(7, {
-        include: [{
-            model:models.Post, 
-            // required: true, //inner join
-            // right: true //right outer join
-        }]
+    // image has one relation with user
+    const userData = await  models.Imageuplaod.findOne({
+        where: {
+            id: fetchId
+        },
+        include: [models.User]
     })
     res.status(200).json({
-        user: data
+        // data: post.User.name 
+        data: userData
     })
 }
 
-
-module.exports = {
-    test
+async function testManyToMany(req, res) {
+    // const fetchId = req.query.id
+    // const teacherData = await models.Teacher.findAll({
+    //     where: {
+    //         teacher_code: fetchId
+    //     },
+    //     include: [models.Student]
+    // })
+    // res.status(200).json({
+    //     data: teacherData
+    // })
+    const fetchName = req.query.name
+    const teacherData = await models.Student.findAll({
+        where: {
+            student_name: fetchName
+        },
+        include: [models.Teacher]
+    })
+    res.status(200).json({
+        data: teacherData
+    })
 }
+
+module.exports = {testOneToMany,testManyToMany,testOneToOne}

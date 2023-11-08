@@ -7,7 +7,7 @@ function insertData(req, res) {
         content:req.body.content,
         imageUrl:req.body.imageUrl,
         categoryId:req.body.categoryId,
-        userId:7
+        userId: req.body.userId
     }
     // A string field has a limit of 255 characters, whereas a text field has a character
     //  limit of 30,000 characters.
@@ -153,10 +153,32 @@ function deletePostById(req, res) {
     })
 }
 
+models.Post.addScope('checkCategoryId', {
+    where: {
+        categoryId: 3
+    }
+})
+
+models.Post.addScope("checkId",{
+    where: {
+        id: 5
+    }
+})
+
+async function userScope(req, res) {
+    
+    let postData = await models.Post.scope(['checkId','checkCategoryId']).findAll({})
+    res.status(200).send({
+        status: 1,
+        data: postData
+    })
+}
+
 module.exports = {
     insertData,
     fetchAllPost,
     fetchPostById,
     updatePostById,
-    deletePostById
+    deletePostById,
+    userScope
 }

@@ -11,7 +11,7 @@ router.post("/login", userController.userLogin)
 router.post("/forgot-password", userController.forgotPassword)
 router.post("/resetpassword/:token", userController.userPostResetPassword)
 router.post("/change-password", userLoginAuth, userController.userChangePassword)
-router.post("/image-upload", imageUploader.upload.single("image"), uploadImage)
+router.post("/image-upload", imageUploader.upload.single("user_image"), uploadImage)
 router.get("/get-uploaded-image/:id", getImage)
 
 module.exports = router
