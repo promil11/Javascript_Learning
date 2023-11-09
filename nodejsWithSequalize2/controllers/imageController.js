@@ -44,4 +44,22 @@ async function getImage(req, res) {
     })
 }
 
-module.exports = {uploadImage, getImage}
+async function paranoidImage(req, res) {  //soft delete using paranoid
+    // const result = await models.Imageuplaod.destroy({
+    //     where: {
+    //         id: 1
+    //     }
+    // })
+    // const result = await models.Imageuplaod.restore({
+    //     where: {
+    //         id:1
+    //     }
+    // })
+
+    // const result = await models.Imageuplaod.findAll({paranoid: false})
+    // res.status(200).json({
+    //     data: result
+    // })
+}
+
+module.exports = {uploadImage, getImage, paranoidImage}

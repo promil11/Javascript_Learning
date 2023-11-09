@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Post, {
-        foreignKey: "userId"
+        foreignKey: "userId",
+        as: "myPost"
       })
 
       User.hasOne(models.Imageuplaod,{
         foreignKey: "user_id",
-        sourceKey: "id"
+        sourceKey: "id",
+        as: "myImage"
       })
     }
   }

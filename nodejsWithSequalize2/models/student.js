@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Student.belongsToMany(models.Teacher, {
-        through: "TeacherStudent"
+        through: "TeacherStudent",
       })
     }
   }

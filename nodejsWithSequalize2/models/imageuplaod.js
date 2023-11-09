@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Imageuplaod.belongsTo(models.User, {
         foreignKey: "user_id",
-        targetKey: "id"
+        targetKey: "name"
       })
     }
   }
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Imageuplaod',
+    paranoid: true,
   });
   return Imageuplaod;
 };
