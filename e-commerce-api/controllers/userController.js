@@ -1,7 +1,8 @@
 const models = require("../models")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt");
-const { use } = require("../routes/userRoute");
+const nodemailer = require("nodemailer");
+const {jwtDecode} = require("jwt-decode");
 
 async function userRegister(req, res) {
     if(!req.body.email)return res.status(400).json({
@@ -106,7 +107,134 @@ async function userLogin(req, res) {
     })
 }
 
+async function UserForgotPassword(req, res){
+    models.User.findOne({where: {email: req.body.email}}).then(async (result)=>{
+        if(result) {
+          let userData = {
+            email: req.body.email,
+            id: result.dataValues.id
+          }
+          console.log(userData, result.dataValues.password)
+            let secretKeyMail = process.env.ACCESSJWTTOKENKEY + result.dataValues.password
+            let tokenGenerate = jwt.sign(userData, secretKeyMail, {expiresIn: "10m"})
+            let linkGenerate = `http://localhost:3000/user/reset-forgot-password/${tokenGenerate}`;
+            console.log(tokenGenerate)
+            const transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                  user: process.env.EMAIL,
+                  pass: process.env.PASSWORD,
+                },
+              });
+            
+              let mailOptions = {
+                from: {
+                  name: "one-time-password reset link",
+                  address: process.env.EMAIL,
+                },
+                to: ["19bit048@ietdavv.edu.in"],
+                subject: "reset password",
+                text: "",
+                html: `<p>this is your one-time-reset link: ${linkGenerate}</p>`,
+              };
+            
+              transporter
+                .sendMail(mailOptions)
+                .then(() => {
+                  return res.status(201).json({ msg: "you should receive email" });
+                })
+                .catch((error) => {
+                  return res.status(500).json({ error });
+                });
+        } else {
+            res.status(400).json({
+                status: 0,
+                message: "Credential Not Valid"
+            })
+        }
+    }).catch((error)=>{
+        res.status(400).json({
+            status: 0,
+            message: "Credential Not Valid",
+            error: error
+        })
+})
+}
+
+async function userResetPassword(req, res) {
+  let token = req.params.token
+  let decodedToken = jwtDecode(token)
+  models.User.findOne({where: {email: decodedToken.email}}).then(async (result)=>{
+    console.log(result)
+    if(result){
+      let secretKeyMail = process.env.SECRET + result.dataValues.password
+      let verifyToken = jwt.verify(token, secretKeyMail)
+      console.log("user token verified")
+      if(verifyToken){
+        let hashedPassword = await bcrypt.hash(req.body.password, 10)
+        models.User.update({password : hashedPassword}, {where: {id: result.dataValues.id}}).then((result)=>{
+          if(!result[0])return res.status(400).send("Bad Request")
+            res.status(200).json({
+                status:1,
+                message:"password update successfully",
+                post: result
+            })
+        }).catch((error)=>{
+            res.status(500).json({
+                status:0,
+                message:"password is not updated",
+                error: error
+            })
+        })
+      } else {
+        res.status(400).json({
+          status: 0,
+          message: "Credential Not Valid",
+        })
+      }
+    }
+     else {
+      res.status(400).json({
+        status: 0,
+        message: "Credential Not Valid",
+    })
+    }
+  }).catch((error)=>{
+    res.status(400).json({
+      status: 0,
+      message: "Credential Not Valid",
+      error: error
+  })
+  })
+}
+
+async function userChangePassword(req, res) {
+  let hashedPassword = await bcrypt.hash(req.body.password, 10)
+  let token = req.headers["jwt_token"]
+  let decodedToken = jwtDecode(token)
+
+  models.User.update({password : hashedPassword}, {where: {email: decodedToken.email}}).then((result)=>{
+    if(!result[0])return res.status(400).send("Bad Request")
+      res.status(200).json({
+          status:1,
+          message:"password update successfully",
+          post: result
+      })
+  }).catch((error)=>{
+      res.status(500).json({
+          status:0,
+          message:"password is not updated",
+          error: error
+      })
+  })
+}
+
 module.exports = {
     userRegister,
-    userLogin
+    userLogin,
+    UserForgotPassword,
+    userResetPassword,
+    userChangePassword
 }

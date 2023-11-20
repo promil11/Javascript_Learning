@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Address, {
         foreignKey: "userId"
       })
+
+      User.hasMany(models.Order, {
+        foreignKey: "userId"
+      })
     }
   }
   User.init({
@@ -57,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    paranoid: true,
   });
   return User;
 };
