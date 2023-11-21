@@ -33,7 +33,9 @@ async function readCustomerProfile(req, res) {
 async function deleteCustomerProfile(req, res) {
     let {id} = req?.params;
     if(id) {
-        models.User.destroy({where: {id: id}}).then((result)=>{
+        models.User.destroy({
+            where: {id: id},
+        }).then((result)=>{
             if(result){
                 res.status(200).json({
                     status:1,
@@ -54,51 +56,90 @@ async function deleteCustomerProfile(req, res) {
                 error: error
             })
         })
+    }else {
+        res.status(400).json({
+            status: 0,
+            message: "Bad request...credential Not Valid"
+        });
     }
 }
 
-
-async function updateCustomerProfileImg(req, res) {
-    let { id } = req?.params
-    const { profileImage } = req?.body;
-    
+async function restoreDeleteCustomerProfile(req, res) {
+    let {id} = req?.params;
     if(id) {
-        const userData = await models.User.findOne({
-            where: {
-                id: id,
+        models.User.restore({where: {id: id}}).then((result)=>{
+            if(result){
+                res.status(200).json({
+                    status:1,
+                    message:"data restore successfully",
+                    result: result
+                })
             }
-        })
-        if(userData){
-            models.User.update({profileImage}, {
-            where: {
-                id: id
-            }
-        }).then((result)=>{
-            res.status(200).json({
-                status: 1,
-                message: "updated successfully",
-                result: result
-            })
+            else {
+                res.status(400).json({
+                    status: 0,
+                    message: "Bad request...credential Not Valid"
+                });
+            } 
         }).catch((error)=>{
-            res.status(400).json({
-                status: 0,
-                message: "Invalid credential...data is not updated",
+            res.status(500).json({
+                status:0,
+                message:"credential Not Valid....data is not deleted",
                 error: error
             })
         })
+    }
+}
+
+async function updateCustomerProfileImg(req, res) {
+    let { id } = req?.params 
+    if(req.file.filename){
+        let profileImage = {
+            profileImage : req.file.filename
         }
-        else {
+        if(id) {
+            const userData = await models.User.findOne({
+                where: {
+                    id: id,
+                }
+            })
+            if(userData){
+                models.User.update(profileImage, {
+                where: {
+                    id: id
+                }
+            }).then((result)=>{
+                res.status(200).json({
+                    status: 1,
+                    message: "updated successfully",
+                    result: result
+                })
+            }).catch((error)=>{
+                res.status(400).json({
+                    status: 0,
+                    message: "Invalid credential...data is not updated",
+                    error: error
+                })
+            })
+            }
+            else {
+                res.status(400).json({
+                    status: 0,
+                    message: "Invalid credential...data is not updated",
+                })
+            }
+        }else {
             res.status(400).json({
                 status: 0,
                 message: "Invalid credential...data is not updated",
             })
-        }
-    }else {
+        }    
+    } else {
         res.status(400).json({
             status: 0,
             message: "Invalid credential...data is not updated",
         })
-    }    
+    }
 }
 
 async function updateCustomerProfileAddress(req, res) {
@@ -228,11 +269,13 @@ async function fetchCustomerOrder(req, res) {
 }
 
 
+
 module.exports = {
      readCustomerProfile,
      updateCustomerProfileImg,
      deleteCustomerProfile,
      updateCustomerProfileAddress,
      createCustomerOrder,
-     fetchCustomerOrder
+     fetchCustomerOrder,
+     restoreDeleteCustomerProfile
 }
