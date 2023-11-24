@@ -72,6 +72,7 @@ async function userLogin(req, res) {
     }).then(async (result)=>{
         if(result) {
             if(await bcrypt.compare(req.body.password, result.dataValues.password)) {
+                userData["id"] = result.id
                 const accessJwtToken = await generateAccessJwtToken(req, res, userData)
                 console.log(accessJwtToken)
                 const refreshToken = await generateRefreshToken(req, res, userData) 

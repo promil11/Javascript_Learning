@@ -6,6 +6,7 @@ const userRoute = require("./routes/userRoute.js")
 const customerRoute = require("./routes/customerRoute.js")
 const categoryRoute = require("./routes/categoryRoute.js")
 const productRoute = require("./routes/productRoute.js")
+const cartRoute = require("./routes/cartRoute.js")
 
 app.use(bodyParser.json())
 
@@ -13,6 +14,7 @@ app.use("/user", userRoute)
 app.use("/customer", customerRoute)
 app.use("/category", categoryRoute)
 app.use("/product", productRoute)
+app.use("/cart", cartRoute)
 
 app.get("/", (req, res)=>{ 
     res.send("hello promil")

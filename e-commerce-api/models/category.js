@@ -58,14 +58,29 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Category',
   });
 
-  Category.beforeCreate((category, options) => {
+  Category.beforeCreate(async (category, options) => {
+    console.log(options)
     console.log(category.categoryName)
     if (category.categoryName) {
-      category.slug = slugify(category.categoryName, { lower: true });
-      console.log(category.slug)
+      const baseSlug = slugify(category.categoryName, { lower: true });
+      let slug = baseSlug;
+      let count = 1;
+  
+      slug = await countFunc(slug, baseSlug, count)
+      
+      category.slug = slug
     }
   });
 
+  async function countFunc(slug, baseSlug, count){
+    while (await Category.findOne({ where: { slug: slug }})) {
+        slug = `${baseSlug}-${count}`;
+        console.log(slug)
+        count += 1;
+      
+    }
+    return slug
+  }
 
   Category.beforeDestroy(async (category, options) => {
     console.log(category.id)
@@ -74,23 +89,11 @@ module.exports = (sequelize, DataTypes) => {
         parentCategoryId: category.id
       },
     });
-    // console.log(childCategories)
     await Promise.all(
       childCategories.map((childCategory) =>
         childCategory.update({ parentCategoryId: category.parentCategoryId })
       )
     );
-
-    // await Category.findOne({
-    //   where: {
-    //     id: category.id
-    //   },
-    //   include: [{
-    //     model: Model.Product
-    //   }]
-    // }).then(result=> {
-    //   console.log(result)
-    // })
     
   });
 
