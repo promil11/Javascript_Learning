@@ -5,13 +5,13 @@ const nodemailer = require("nodemailer");
 const {jwtDecode} = require("jwt-decode");
 
 async function userRegister(req, res) {
-    if(!req.body.email)return res.status(400).json({
+    if(!req?.body.email)return res.status(400).json({
         status: 0,
         message: "Email cannot be empty",
       });
     models.User.findOne({
         where: {
-            email: req.body.email
+            email: req?.body.email
         }
     }).then(async (result)=> {
         if(result) {
@@ -22,31 +22,49 @@ async function userRegister(req, res) {
         }else{
             let hashedPassword;
             if(req.body.password) {
-                hashedPassword = await bcrypt.hash(req.body.password, 10);
+                hashedPassword = await bcrypt.hash(req?.body.password, 10);
             }
             
             let userData = {
-                userName: req.body.userName,
-                email: req.body.email,
+                userName: req?.body.userName,
+                email: req?.body.email,
                 password : hashedPassword,
-                dob: req.body.dob,
-                profileImage: req.body.profileImage
+                dob: req?.body.dob,
+                profileImage: req?.body.profileImage
             }
             
             models.User.create(userData).then((result)=>{
-                res.status(201).json({
-                    status: 1,
-                    message: "user data registered successfullly",
-                    user: result,
+                models.PhoneNumber.bulkCreate([
+                    { userId: result.id, phoneNumber: req?.body.phoneNumber1},
+                    { userId: result.id, phoneNumber: req?.body.phoneNumber2}
+                  ]).then((result)=>{
+                    res.status(201).json({
+                        status: 1,
+                        message: "user data registered successfullly",
+                        user: result,
                     });
+                  }).catch((error)=>{
+                    res.status(400).json({
+                        status: 0,
+                        message: "something went wrong...credential wrong",
+                        error: error,
+                    });
+                })
+               
             }).catch((error)=>{
-                res.status(500).json({
+                res.status(400).json({
                     status: 0,
-                    message: "something went wrong",
+                    message: "something went wrong...credential wrong",
                     error: error,
                 });
             })
         }
+    }).catch((error)=>{
+        res.status(400).json({
+            status: 0,
+            message: "something went wrong...credential wrong",
+            error: error,
+        });
     })
 }
 

@@ -82,12 +82,26 @@ async function getFromCart(req, res) {
                         model: models.cartProduct,
                         where: {
                             cartId: result.id
-                        }
+                        },
+                        include: [
+                            {
+                                model: models.Product
+                            }
+                        ]
                     }
                 ]
             }).then((result)=>{
+                let totalPrice
+                if (result) {
+                    totalPrice = result.cartProducts.reduce((sum, cartProduct) => {
+                        return sum + (cartProduct.Product ? cartProduct.Product.price * cartProduct.quantity : 0);
+                    }, 0)
+                } else {
+                    totalPrice = 0
+                }
                 res.status(201).json({
                     status: 1,
+                    totalPrice: totalPrice,
                     message: "Cart data fetch successfullly",
                     user: result,
                 });

@@ -418,7 +418,6 @@ async function fetchCommentProduct(req, res) {
                     error: error
                 });
             })
-
 } 
 
 async function filterationProduct(req, res) {

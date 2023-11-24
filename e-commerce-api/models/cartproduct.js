@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       cartProduct.belongsTo(models.Cart, {
         foreignKey: "cartId"
       })
+
+      cartProduct.belongsTo(models.Product, {
+        foreignKey: "productId"
+      })
     }
   }
   cartProduct.init({
@@ -36,14 +40,5 @@ module.exports = (sequelize, DataTypes) => {
 
   let totalPrice = 0
 
-  // cartProduct.afterCreate(async (category, options) => {
-  //   const {Product} = sequelize.models
-  //   const data = await Product.findOne({
-  //     where: {
-  //       id: category.productId
-  //     }
-  //   })
-  //   console.log(data.price)
-  // })
   return cartProduct;
 };
