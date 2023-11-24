@@ -1,4 +1,5 @@
 const models = require("../models")
+const { jwtDecode } = require('jwt-decode');
 
 async function readCustomerProfile(req, res) {
     let {id} = req?.params
@@ -92,54 +93,47 @@ async function restoreDeleteCustomerProfile(req, res) {
 }
 
 async function updateCustomerProfile(req, res) {
-    let { user_id } = req?.params 
-    if(req.file.filename){
-        let profileImage = {
-            profileImage : req?.file.filename
+    let token = req.headers["jwt_token"]
+    let decodedToken = jwtDecode(token)
+    let profileImage = req?.file?.filename
+    let {phoneNumber1, id1, phoneNumber2, id2} = req?.body 
+    if(decodedToken.id) {
+        const userData = await models.User.findOne({
+            where: {
+                id: decodedToken.id,
+            }
+        })
+        if(userData && profileImage){
+            models.User.update({profileImage}, {
+            where: {
+                id: decodedToken.id
+            }
+        }).then((result)=>{
+            res.status(200).json({
+                status: 1,
+                message: "updated successfully",
+                result: result
+            })
+        }).catch((error)=>{
+            res.status(400).json({
+                status: 0,
+                message: "Invalid credential...data is not updated",
+                error: error
+            })
+        })
         }
-        if(user_id) {
-            const userData = await models.User.findOne({
-                where: {
-                    id: user_id,
-                }
-            })
-            if(userData){
-                models.User.update(profileImage, {
-                where: {
-                    id: user_id
-                }
-            }).then((result)=>{
-                res.status(200).json({
-                    status: 1,
-                    message: "updated successfully",
-                    result: result
-                })
-            }).catch((error)=>{
-                res.status(400).json({
-                    status: 0,
-                    message: "Invalid credential...data is not updated",
-                    error: error
-                })
-            })
-            }
-            else {
-                res.status(400).json({
-                    status: 0,
-                    message: "Invalid credential...data is not updated",
-                })
-            }
-        }else {
+        else {
             res.status(400).json({
                 status: 0,
                 message: "Invalid credential...data is not updated",
             })
-        }    
-    } else {
+        }
+    }else {
         res.status(400).json({
             status: 0,
             message: "Invalid credential...data is not updated",
         })
-    }
+    }    
 }
 
 async function updateCustomerProfileAddress(req, res) {

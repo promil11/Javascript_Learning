@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.PhoneNumber, {
         foreignKey: "userId"
       })
+
+      User.hasMany(models.wishList, {
+        foreignKey: "userId"
+      })
     }
   }
   User.init({
