@@ -1,255 +1,203 @@
 const models = require("../models");
 const { jwtDecode } = require('jwt-decode');
 const { Op } = require("sequelize");
+const {checkPermission} = require("../middleware/checkPermission.js")
 
 
 async function createProduct(req, res) {
-    const {productName, description, price, stockQuantity, imageUrl, isActive, categoryId} = req?.body
-    models.Product.create({productName, description, price, stockQuantity, imageUrl, isActive, categoryId}).then((result)=>{
-        res.status(201).json({
-            status: 1,
-            message: "Product data registered successfullly",
-            user: result,
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'CreateProduct').then(()=>{
+            const {productName, description, price, stockQuantity, imageUrl, isActive, categoryId} = req?.body
+            models.Product.create({productName, description, price, stockQuantity, imageUrl, isActive, categoryId}).then((result)=>{
+                res.status(201).json({
+                    status: 1,
+                    message: "Product data registered successfullly",
+                    user: result,
+                    });
+            }).catch((error)=>{
+                res.status(500).json({
+                    status: 0,
+                    message: "something went wrong",
+                    error: error,
+                });
+            })
+        }).catch((error)=>{
+                res.status(401).json({
+                    status: 0,
+                    message: "you are unauthorized to access this service",
+                    error: error
+                });
+            })
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: "internal server error",
+                error: error
             });
-    }).catch((error)=>{
-        res.status(500).json({
-            status: 0,
-            message: "something went wrong",
-            error: error,
-        });
-    })
-}
+        }
+    }
 
 async function fetchProduct(req, res) {
-    let {id} = req?.params
-    if(id) {
-        models.Product.findOne({
-            where: {
-                id: id
-            },
-            include: [
-                {
-                    model: models.Category
-                }
-            ]
-        }).then((result)=>{
-            if(result) {
-                res.status(200).send({
-                    status:1,
-                    message: "product data fetch successfully",
-                    data: result
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'ReadParentCategory').then(()=>{
+            let {id} = req?.params
+            if(id) {
+                models.Product.findOne({
+                    where: {
+                        id: id
+                    },
+                    include: [
+                        {
+                            model: models.Category
+                        }
+                    ]
+                }).then((result)=>{
+                    if(result) {
+                        res.status(200).send({
+                            status:1,
+                            message: "product data fetch successfully",
+                            data: result
+                        })
+                    }else {
+                        res.status(400).json({
+                            status: 0,
+                            message: "Bad request...credential Not Valid"
+                        });
+                    }
+                }).catch((error)=>{
+                    res.status(500).json({
+                        status: 0,
+                        message: "credential Not Valid",
+                        error: error
+                    });
                 })
-            }else {
-                res.status(400).json({
-                    status: 0,
-                    message: "Bad request...credential Not Valid"
-                });
+            } else {
+                models.Product.findAll({
+                    include: [
+                        {
+                            model: models.Category
+                        }
+                    ]
+                }).then((result)=>{
+                    if(result) {
+                        res.status(200).send({
+                            status:1,
+                            message: "product data fetch successfully",
+                            data: result
+                        })
+                    }else {
+                        res.status(400).json({
+                            status: 0,
+                            message: "Bad request...credential Not Valid"
+                        });
+                    }
+                }).catch((error)=>{
+                    res.status(500).json({
+                        status: 0,
+                        message: "credential Not Valid",
+                        error: error
+                    });
+                })
             }
         }).catch((error)=>{
-            res.status(500).json({
+            res.status(401).json({
                 status: 0,
-                message: "credential Not Valid",
+                message: "you are unauthorized to access this service",
                 error: error
             });
         })
-    } else {
-        models.Product.findAll({
-            include: [
-                {
-                    model: models.Category
-                }
-            ]
-        }).then((result)=>{
-            if(result) {
-                res.status(200).send({
-                    status:1,
-                    message: "product data fetch successfully",
-                    data: result
-                })
-            }else {
-                res.status(400).json({
-                    status: 0,
-                    message: "Bad request...credential Not Valid"
-                });
-            }
-        }).catch((error)=>{
-            res.status(500).json({
-                status: 0,
-                message: "credential Not Valid",
-                error: error
-            });
-        })
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
     }
 }
 
 async function deleteProduct(req, res) {
-    let {id} = req?.params;
-    if(id) {
-        models.Product.destroy({
-            where: {id: id},
-        }).then((result)=>{
-            if(result){
-                res.status(200).json({
-                    status:1,
-                    message:"Product data deleted successfully",
-                    result: result
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'DeleteProduct').then(()=>{
+            let {id} = req?.params;
+            if(id) {
+                models.Product.destroy({
+                    where: {id: id},
+                }).then((result)=>{
+                    if(result){
+                        res.status(200).json({
+                            status:1,
+                            message:"Product data deleted successfully",
+                            result: result
+                        })
+                    }
+                    else {
+                        res.status(400).json({
+                            status: 0,
+                            message: "Bad request...credential Not Valid"
+                        });
+                    } 
+                }).catch((error)=>{
+                    res.status(500).json({
+                        status:0,
+                        message:"credential Not Valid....data is not deleted",
+                        error: error
+                    })
                 })
-            }
-            else {
+            }else {
                 res.status(400).json({
                     status: 0,
                     message: "Bad request...credential Not Valid"
                 });
-            } 
+            }
         }).catch((error)=>{
-            res.status(500).json({
-                status:0,
-                message:"credential Not Valid....data is not deleted",
+            res.status(401).json({
+                status: 0,
+                message: "you are unauthorized to access this service",
                 error: error
-            })
+            });
         })
-    }else {
-        res.status(400).json({
+    } catch (error) {
+        res.status(500).json({
             status: 0,
-            message: "Bad request...credential Not Valid"
+            message: "internal server error",
+            error: error
         });
     }
 }
+
 
 async function updateProduct(req, res) {
-    let { id } = req?.params
-    if(id){
-        let {productName, description, price, stockQuantity, imageUrl, isActive, categoryId} = req?.body
-        models.Product.update({productName, description, price, stockQuantity, imageUrl, isActive, categoryId}, {
-            where: {
-                    id: id
-                }
-            }).then((result)=>{
-                if(result){
-                    res.status(200).json({
-                        status:1,
-                        message:"product data update successfully",
-                        result: result
-                    })
-                }
-                else {
-                    res.status(400).json({
-                        status: 0,
-                        message: "Bad request...credential Not Valid"
-                    });
-                } 
-        }).catch((error)=>{
-            res.status(400).json({
-                status:0,
-                message:"Bad request...credential Not Valid",
-                error: error
-            })
-        })
-    } else {
-        res.status(400).json({
-            status: 0,
-            message: "Bad request...credential Not Valid"
-        });
-    }
-}
-
-async function createReviewProduct(req, res) {
-    let { order_id, product_id } = req?.query
-    let token = req.headers["jwt_token"]
-    let decodedToken = jwtDecode(token)
-    models.Review.findOne({
-        where: {
-            userId: decodedToken.id,
-            productId: product_id
-        }
-    }).then((result)=>{
-        if(result !== null) {
-            models.User.findOne({
-                where: {
-                    id: decodedToken.id
-                },
-                include: [{
-                    model: models.Order,
+    try {
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'UpdateProduct').then(()=>{
+            let { id } = req?.params
+            if(id){
+                let {productName, description, price, stockQuantity, imageUrl, isActive, categoryId} = req?.body
+                models.Product.update({productName, description, price, stockQuantity, imageUrl, isActive, categoryId}, {
                     where: {
-                        id: order_id
-                    }
-                }]
-            }).then((result)=>{
-                if(result.Orders[0].status === 'delivered') {
-                    const { review } = req?.body
-                    if(review) {
-                        console.log(result.id, "result_id")
-                        models.Review.update({review}, {
-                            where: {
-                                userId: result.id
-                            }
-                        }).then((result)=> {
-                            res.status(201).json({
-                                status: 1,
-                                message: " product review data updated successfullly",
-                                user: result,
-                            });
-                        }).catch((error)=>{
+                            id: id
+                        }
+                    }).then((result)=>{
+                        if(result){
+                            res.status(200).json({
+                                status:1,
+                                message:"product data update successfully",
+                                result: result
+                            })
+                        }
+                        else {
                             res.status(400).json({
                                 status: 0,
-                                message: "Bad request...credential Not Valid",
-                                error: error,
+                                message: "Bad request...credential Not Valid"
                             });
-                        })
-                    } else {
-                        res.status(400).json({
-                            status: 0,
-                            message: "Bad request...credential Not Valid",
-                            error: error,
-                        });
-                    }
-                } else {
-                    res.status(400).json({
-                        status: 0,
-                        message: "Bad request...credential Not Valid",
-                        error: error,
-                    });
-                }
-                }).catch((error)=>{
-                    res.status(400).json({
-                        status: 0,
-                        message: "Bad request...credential Not Valid",
-                        error: error,
-                    });
-                })
-        } else {
-            models.User.findOne({
-                where: {
-                    id: decodedToken.id
-                },
-                include: [{
-                    model: models.Order,
-                    where: {
-                        id: order_id
-                    }
-                }]
-                }).then((result)=>{
-                    if(result.Orders[0].status === 'delivered') {
-                        const {userId, productId, review} = req?.body
-                            models.Review.create({userId, productId, review}).then((result)=>{
-                                res.status(201).json({
-                                    status: 1,
-                                    message: " product review data registered successfullly",
-                                    user: result,
-                                    });
-                            }).catch((error)=>{
-                                res.status(500).json({
-                                    status: 0,
-                                    message: "something went wrong",
-                                    error: error,
-                                });
-                            })
-                    } else {
-                        res.status(401).json({
-                            status: 0,
-                            message: "unauthorized..not allow to give review on this product"
-                        })
-                    }
+                        } 
                 }).catch((error)=>{
                     res.status(400).json({
                         status:0,
@@ -257,68 +205,229 @@ async function createReviewProduct(req, res) {
                         error: error
                     })
                 })
-            } 
-        }).catch((error)=>{
-            res.status(400).json({
-                status:0,
-                message:"Bad request...credential Not Valid",
-                error: error
-            })
-        })
-        }
-
-async function fetchReviewProduct(req, res) {
-    let purchased = false;
-    let {productId} = req?.query
-    let token = req.headers["jwt_token"]
-    let decodedToken = jwtDecode(token)
-    console.log(decodedToken.id, productId)
-    
-    models.Order.findOne({
-        where: {
-            userId: decodedToken.id,
-        }
-    }).then((result)=>{
-        if(result !== null){
-            if(result.status === 'delivered') {
-               purchased = true
-            }
-            models.Review.findAll({
-                where: {
-                    productId: productId
-                }
-            }).then((result)=>{
-                if(result !== null) {
-                    res.status(200).send({
-                        status:1,
-                        purchased: purchased,
-                        message: "product review fetch successfully",
-                        data: result
-                    })
-                }else {
-                    res.status(400).json({
-                        status: 0,
-                        message: "Bad request...credential Not Valid"
-                    });
-                }
-            })
-            
-        }else {
+            } else {
                 res.status(400).json({
                     status: 0,
                     message: "Bad request...credential Not Valid"
                 });
             }
-    
-    }).catch((error)=>{
-                res.status(500).json({
-                    status: 0,
-                    message: "credential Not Valid",
-                    error: error
-                });
-            })
+        }).catch(error => {
+            res.status(401).json({
+                status: 0,
+                message: "you are unauthorized to perform this action....Forbidden"
+            });
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
+    }  
+}
 
-} 
+
+async function createReviewProduct(req, res) {
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'CreateProductReview').then(()=>{
+            let { order_id, product_id } = req?.query
+            models.Review.findOne({
+                where: {
+                    userId: decodedToken.id,
+                    productId: product_id
+                }
+            }).then((result)=>{
+                if(result !== null) {
+                    models.User.findOne({
+                        where: {
+                            id: decodedToken.id
+                        },
+                        include: [{
+                            model: models.Order,
+                            where: {
+                                id: order_id
+                            }
+                        }]
+                    }).then((result)=>{
+                        console.log(result.Orders[0].status)
+                        if(result.Orders[0].status === 'delivered to user') {
+                            const { review } = req?.body
+                            if(review) {
+                                models.Review.update({review}, {
+                                    where: {
+                                        userId: result.id
+                                    }
+                                }).then((result)=> {
+                                    res.status(201).json({
+                                        status: 1,
+                                        message: " product review data updated successfullly",
+                                        user: result,
+                                    });
+                                }).catch((error)=>{
+                                    res.status(400).json({
+                                        status: 0,
+                                        message: "Bad request...credential Not Valid",
+                                        error: error,
+                                    });
+                                })
+                            } else {
+                                res.status(400).json({
+                                    status: 0,
+                                    message: "Bad request...credential Not Valid",
+                                    error: error,
+                                });
+                            }
+                        } else {
+                            res.status(400).json({
+                                status: 0,
+                                message: "Bad request...credential Not Valid",
+                                error: error,
+                            });
+                        }
+                        }).catch((error)=>{
+                            res.status(400).json({
+                                status: 0,
+                                message: "Bad request...credential Not Valid",
+                                error: error,
+                            });
+                        })
+                } else {
+                    models.User.findOne({
+                        where: {
+                            id: decodedToken.id
+                        },
+                        include: [{
+                            model: models.Order,
+                            where: {
+                                id: order_id
+                            }
+                        }]
+                        }).then((result)=>{
+                            if(result.Orders[0].status === 'delivered to user') {
+                                const {userId, productId, review} = req?.body
+                                    models.Review.create({userId, productId, review}).then((result)=>{
+                                        res.status(201).json({
+                                            status: 1,
+                                            message: " product review data registered successfullly",
+                                            user: result,
+                                            });
+                                    }).catch((error)=>{
+                                        res.status(500).json({
+                                            status: 0,
+                                            message: "something went wrong",
+                                            error: error,
+                                        });
+                                    })
+                            } else {
+                                res.status(401).json({
+                                    status: 0,
+                                    message: "unauthorized..not allow to give review on this product"
+                                })
+                            }
+                        }).catch((error)=>{
+                            res.status(400).json({
+                                status:0,
+                                message:"Bad request...credential Not Valid",
+                                error: error
+                            })
+                        })
+                    }
+                    }).catch((error)=>{
+                        res.status(400).json({
+                            status:0,
+                            message:"Bad request...credential Not Valid",
+                            error: error
+                        })
+                    }) 
+        }).catch((error)=>{
+        res.status(401).json({
+            status: 0,
+            message: "you are unauthorized to access this service",
+            error: error
+        });
+    })
+} catch (error) {
+    res.status(500).json({
+        status: 0,
+        message: "internal server error",
+        error: error
+    });
+}
+}
+
+async function fetchReviewProduct(req, res) {
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'FetchProductReview').then(()=>{
+            let purchased = false;
+            let {productId} = req?.query            
+            models.Order.findOne({
+                where: {
+                    userId: decodedToken.id,
+                }
+            }).then((result)=>{
+                if(result !== null){
+                    if(result.status === 'delivered') {
+                       purchased = true
+                    }
+                    models.Review.findAll({
+                        where: {
+                            productId: productId
+                        }
+                    }).then((result)=>{
+                        if(result !== null) {
+                            res.status(200).send({
+                                status:1,
+                                purchased: purchased,
+                                message: "product review fetch successfully",
+                                data: result
+                            })
+                        }else {
+                            res.status(400).json({
+                                status: 0,
+                                message: "Bad request...credential Not Valid"
+                            });
+                        }
+                    }).catch((error)=>{
+                        res.status(400).json({
+                            status: 0,
+                            message: "Bad request...credential Not Valid"
+                        });
+                    })
+                }else {
+                        res.status(400).json({
+                            status: 0,
+                            message: "Bad request...credential Not Valid"
+                        });
+                    }
+                }).catch((error)=>{
+                        res.status(500).json({
+                            status: 0,
+                            message: "credential Not Valid",
+                            error: error
+                        });
+                    })
+        }).catch((error)=>{
+            res.status(401).json({
+                status: 0,
+                message: "you are unauthorized to access this service",
+                error: error
+            });
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
+}
+}
+    
+
 
 async function createCommentProduct(req, res) {
     let token = req.headers["jwt_token"]

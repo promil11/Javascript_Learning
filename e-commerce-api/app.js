@@ -8,7 +8,8 @@ const categoryRoute = require("./routes/categoryRoute.js")
 const productRoute = require("./routes/productRoute.js")
 const cartRoute = require("./routes/cartRoute.js")
 const orderRoute = require("./routes/orderRoute.js")
-const wishListRoute = require("./routes/wishListRoute")
+const wishListRoute = require("./routes/wishListRoute.js")
+const roleRoute = require("./routes/roleRoute.js")
 
 app.use(bodyParser.json())
 
@@ -19,6 +20,7 @@ app.use("/product", productRoute)
 app.use("/cart", cartRoute)
 app.use("/order", orderRoute)
 app.use("/wish-List", wishListRoute)
+app.use("/role", roleRoute)
 
 app.get("/", (req, res)=>{ 
     res.send("hello promil")

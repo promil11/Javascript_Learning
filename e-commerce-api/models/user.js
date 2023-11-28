@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.wishList, {
         foreignKey: "userId"
       })
+      
+      User.belongsToMany(models.Role, {
+        through: "UserRole",
+        foreignKey: 'userId',
+        as: "role"
+      })
     }
   }
   User.init({

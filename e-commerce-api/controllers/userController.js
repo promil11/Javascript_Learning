@@ -34,31 +34,34 @@ async function userRegister(req, res) {
             }
             
             models.User.create(userData).then((result)=>{
-                models.PhoneNumber.bulkCreate([
-                    { userId: result.id, phoneNumber: req?.body.phoneNumber1},
-                    { userId: result.id, phoneNumber: req?.body.phoneNumber2}
-                  ]).then((result)=>{
-                    res.status(201).json({
-                        status: 1,
-                        message: "user data registered successfullly",
-                        user: result,
-                    });
-                  }).catch((error)=>{
+                try{
+                    let {roleId} = req?.body
+                    models.UserRole.create({roleId: roleId, userId: result.id})
+                    models.PhoneNumber.bulkCreate([
+                        { userId: result.id, phoneNumber: req?.body.phoneNumber1},
+                        { userId: result.id, phoneNumber: req?.body.phoneNumber2}
+                      ]).then((result)=>{
+                        res.status(201).json({
+                            status: 1,
+                            message: "user data registered successfullly",
+                            user: result,
+                        });
+                      }).catch((error)=>{
+                        res.status(400).json({
+                            status: 0,
+                            message: "something went wrong...credential wrong",
+                            error: error,
+                        });
+                    })
+                } catch(error) {
                     res.status(400).json({
                         status: 0,
                         message: "something went wrong...credential wrong",
                         error: error,
                     });
-                })
-               
-            }).catch((error)=>{
-                res.status(400).json({
-                    status: 0,
-                    message: "something went wrong...credential wrong",
-                    error: error,
-                });
+                }  
             })
-        }
+        }  
     }).catch((error)=>{
         res.status(400).json({
             status: 0,
@@ -67,6 +70,7 @@ async function userRegister(req, res) {
         });
     })
 }
+
 
 async function generateAccessJwtToken(req, res, userData) {
     let accessJwtToken = jwt.sign(userData, process.env.ACCESSJWTTOKENKEY, {expiresIn: '15m'})
@@ -90,20 +94,34 @@ async function userLogin(req, res) {
     }).then(async (result)=>{
         if(result) {
             if(await bcrypt.compare(req.body.password, result.dataValues.password)) {
-                userData["id"] = result.id
-                const accessJwtToken = await generateAccessJwtToken(req, res, userData)
-                console.log(accessJwtToken)
-                const refreshToken = await generateRefreshToken(req, res, userData) 
-                console.log(refreshToken)
-                let sendData = {
-                    status: 1,
-                    message: "User Login Successfull",
-                    data: {
-                        jwtToken: accessJwtToken,
-                        refreshToken: refreshToken
+                let data = await models.UserRole.findOne({
+                    where: {
+                        userId: result.id
                     }
+                })
+                if(!data[0]){
+                    userData["id"] = result.id
+                    userData["roleId"] = data.roleId
+                    console.log(userData)
+                    const accessJwtToken = await generateAccessJwtToken(req, res, userData)
+                    console.log(accessJwtToken)
+                    const refreshToken = await generateRefreshToken(req, res, userData) 
+                    console.log(refreshToken)
+                    let sendData = {
+                        status: 1,
+                        message: "User Login Successfull",
+                        data: {
+                            jwtToken: accessJwtToken,
+                            refreshToken: refreshToken
+                        }
+                    }
+                    res.status(200).send(sendData)
+                } else{
+                    res.status(400).json({
+                        status: 0,
+                        message: "Bad request...credential Not Valid"
+                    });
                 }
-                res.status(200).send(sendData)
             }
             else{
                 res.status(400).json({
