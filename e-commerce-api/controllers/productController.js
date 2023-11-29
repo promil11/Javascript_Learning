@@ -300,6 +300,9 @@ async function createReviewProduct(req, res) {
                             id: decodedToken.id
                         },
                         include: [{
+                            where: {
+                                id: decodedToken.id
+                            },
                             model: models.Order,
                             where: {
                                 id: order_id
@@ -313,6 +316,9 @@ async function createReviewProduct(req, res) {
                                             status: 1,
                                             message: " product review data registered successfullly",
                                             user: result,
+                                            where: {
+                                                id: decodedToken.id
+                                            }
                                             });
                                     }).catch((error)=>{
                                         res.status(500).json({
@@ -371,46 +377,29 @@ async function fetchReviewProduct(req, res) {
                 }
             }).then((result)=>{
                 if(result !== null){
-                    if(result.status === 'delivered') {
+                    if(result.status === 'delivered to user') {
                        purchased = true
                     }
-                    models.Review.findAll({
-                        where: {
-                            productId: productId
-                        }
-                    }).then((result)=>{
-                        if(result !== null) {
-                            res.status(200).send({
-                                status:1,
-                                purchased: purchased,
-                                message: "product review fetch successfully",
-                                data: result
-                            })
-                        }else {
-                            res.status(400).json({
-                                status: 0,
-                                message: "Bad request...credential Not Valid"
-                            });
-                        }
-                    }).catch((error)=>{
-                        res.status(400).json({
-                            status: 0,
-                            message: "Bad request...credential Not Valid"
-                        });
-                    })
-                }else {
-                        res.status(400).json({
-                            status: 0,
-                            message: "Bad request...credential Not Valid"
-                        });
-                    }
-                }).catch((error)=>{
-                        res.status(500).json({
-                            status: 0,
-                            message: "credential Not Valid",
-                            error: error
-                        });
-                    })
+                 }
+                })
+            models.Review.findAll({
+                where: {
+                    productId: productId
+                }
+            }).then((result)=>{
+                res.status(200).send({
+                    status:1,
+                    purchased: purchased,
+                    message: "product review fetch successfully",
+                    data: result
+                })
+            }).catch((error)=>{
+                res.status(400).json({
+                    status: 0,
+                    message: "Bad request...credential Not Valid",
+                    error: error
+                });
+            })
         }).catch((error)=>{
             res.status(401).json({
                 status: 0,
@@ -430,164 +419,200 @@ async function fetchReviewProduct(req, res) {
 
 
 async function createCommentProduct(req, res) {
-    let token = req.headers["jwt_token"]
-    let decodedToken = jwtDecode(token)
-    let { order_id } = req?.query
-    models.User.findOne({
-        where: {
-            id: decodedToken.id
-        },
-        include: [{
-            model: models.Order,
-            where: {
-                id: order_id
-            }
-        }]
-    }).then((result)=>{
-        console.log(result)
-        if(result.Orders[0].status === 'delivered') {
-            userId = decodedToken.id
-            const { productId, comment} = req?.body
-            console.log(userId, productId, comment)
-                models.Comment.create({userId, productId, comment}).then((result)=>{
-                    res.status(201).json({
-                        status: 1,
-                        message: " product comment data registered successfullly",
-                        user: result,
-                        });
-                }).catch((error)=>{
-                    res.status(500).json({
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'CreateProductComment').then(()=>{
+            let { order_id } = req?.query
+            models.User.findOne({
+                where: {
+                    id: decodedToken.id
+                },
+                include: [{
+                    model: models.Order,
+                    where: {
+                        id: order_id
+                    }
+                }]
+            }).then((result)=>{
+                console.log(result)
+                if(result.Orders[0].status === 'delivered to user') {
+                    userId = decodedToken.id
+                    const { productId, comment} = req?.body
+                    console.log(userId, productId, comment)
+                        models.Comment.create({userId, productId, comment}).then((result)=>{
+                            res.status(201).json({
+                                status: 1,
+                                message: " product comment data registered successfullly",
+                                user: result,
+                                });
+                        }).catch((error)=>{
+                            res.status(500).json({
+                                status: 0,
+                                message: "something went wrong",
+                                error: error,
+                            });
+                        })
+                } else {
+                    res.status(401).json({
                         status: 0,
-                        message: "something went wrong",
-                        error: error,
-                    });
+                        message: "unauthorized..not allow to give comment on this product"
+                    })
+                }
+            }).catch((error)=>{
+                res.status(400).json({
+                    status:0,
+                    message:"Bad request...credential Not Valid",
+                    error: error
                 })
-        } else {
+            })
+        }).catch((error)=>{
             res.status(401).json({
                 status: 0,
-                message: "unauthorized..not allow to give comment on this product"
-            })
-        }
-    }).catch((error)=>{
-        res.status(400).json({
-            status:0,
-            message:"Bad request...credential Not Valid",
-            error: error
+                message: "you are unauthorized to access this service",
+                error: error
+            });
         })
-    })
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
+    }
 }
 
 async function fetchCommentProduct(req, res) {
-    let purchased = false;
-    let {productId} = req?.query
-    let token = req.headers["jwt_token"]
-    let decodedToken = jwtDecode(token)
-    console.log(decodedToken.id, productId)
-    
-    models.Order.findOne({
-        where: {
-            userId: decodedToken.id,
-        }
-    }).then((result)=>{
-        if(result !== null){
-            if(result.status === 'delivered') {
-               purchased = true
-            }
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'fetchProductComment').then(()=>{
+            let purchased = false;
+            let {productId} = req?.query
+            console.log(decodedToken.id, productId)
+            models.Order.findOne({
+                where: {
+                    userId: decodedToken.id,
+                }
+            }).then((result)=>{
+                if(result !== null){
+                    if(result.status === 'delivered to user') {
+                       purchased = true
+                    }
+                }
+            })
             models.Comment.findAll({
                 where: {
                     productId: productId
                 }
             }).then((result)=>{
-                if(result !== null) {
                     res.status(200).send({
                         status:1,
                         purchased: purchased,
                         message: "product comment fetch successfully",
                         data: result
                     })
-                }else {
+                }).catch((error)=>{
                     res.status(400).json({
                         status: 0,
-                        message: "Bad request...credential Not Valid"
-                    });
-                }
-            })
-            
-        }else {
-                res.status(400).json({
+                        message: "Bad request...credential Not Valid",
+                        error: error
+                    })
+                })
+            }).catch((error)=>{
+                res.status(401).json({
                     status: 0,
-                    message: "Bad request...credential Not Valid"
-                });
-            }
-    
-    }).catch((error)=>{
-                res.status(500).json({
-                    status: 0,
-                    message: "credential Not Valid",
+                    message: "you are unauthorized to access this service",
                     error: error
                 });
-            })
-} 
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
+    }
+}
+    
 
 async function filterationProduct(req, res) {
-    const {q, category, s, ps, page} = req?.query
-    let pageSize = ps && !isNaN(ps) ? parseInt(ps) : 16
-    let offsetSize = ps && !isNaN(page) ? parseInt(page) : 0
-    let options = {}
-    if(s) {
-        options.order = [[s , "DESC"]]
-    }
-    if(q && category) {
-        options["where"] =  {
-            [Op.and]: {
-                [Op.or]: {
-                    productName: {
-                        [Op.like] : '%' + q + "%"
-                    },
-                    description: {
-                        [Op.like]: "%" + q + "%"
+    try{
+        let token = req.headers["jwt_token"]
+        let decodedToken = jwtDecode(token)
+        checkPermission(decodedToken.roleId, 'FilterationProduct').then(async()=>{
+            const {q, category, s, ps, page} = req?.query
+            let pageSize = ps && !isNaN(ps) ? parseInt(ps) : 16
+            let offsetSize = ps && !isNaN(page) ? parseInt(page) : 0
+            let options = {}
+            if(s) {
+                options.order = [[s , "DESC"]]
+            }
+            if(q && category) {
+                options["where"] =  {
+                    [Op.and]: {
+                        [Op.or]: {
+                            productName: {
+                                [Op.like] : '%' + q + "%"
+                            },
+                            description: {
+                                [Op.like]: "%" + q + "%"
+                            }
+                        },
+                        categoryId: category
                     }
-                },
-                categoryId: category
-            }
-        }
-        options["limit"] = pageSize
-        options["offset"] = (offsetSize - 1) * pageSize
-    } else if (q) {
-        options["where"] =  {
-            [Op.or]: {
-                productName: {
-                    [Op.like] : '%' + q + "%"
-                },
-                description: {
-                    [Op.like]: "%" + q + "%"
                 }
+                options["limit"] = pageSize
+                options["offset"] = (offsetSize - 1) * pageSize
+            } else if (q) {
+                options["where"] =  {
+                    [Op.or]: {
+                        productName: {
+                            [Op.like] : '%' + q + "%"
+                        },
+                        description: {
+                            [Op.like]: "%" + q + "%"
+                        }
+                    }
+                }
+                options["limit"] = pageSize
+                options["offset"] = (offsetSize - 1) * pageSize
             }
-        }
-        options["limit"] = pageSize
-        options["offset"] = (offsetSize - 1) * pageSize
-    }
-    else if (category) {
-        options["where"] =  {
-            categoryId: category
-        }
-        options["limit"] = pageSize
-        options["offset"] = (offsetSize - 1) * pageSize
-    }
-  
-    let totalCount = await models.Product.count(options)
-
-    models.Product.findAll(
-        options
-    ).then((result) => {
-        console.log(result)
-        res.status(200).send({
-            totalCount: totalCount,
-            status:1,
-            message: "filter product data fetch successfully",
-            data: result
+            else if (category) {
+                options["where"] =  {
+                    categoryId: category
+                }
+                options["limit"] = pageSize
+                options["offset"] = (offsetSize - 1) * pageSize
+            }
+          
+            let totalCount = await models.Product.count(options)
+        
+            models.Product.findAll(
+                options
+            ).then((result) => {
+                console.log(result)
+                res.status(200).send({
+                    totalCount: totalCount,
+                    status:1,
+                    message: "filter product data fetch successfully",
+                    data: result
+                })
+            })
+        }).catch((error)=>{
+            res.status(401).json({
+                status: 0,
+                message: "you are unauthorized to access this service",
+                error: error
+            });
         })
-    })
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: "internal server error",
+            error: error
+        });
+    } 
 }
 
 module.exports = {
